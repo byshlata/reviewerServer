@@ -35,6 +35,8 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser());
 
+app.user('/privacy-policy', express.static('public'))
+
 app.use(`${Path.Register}`, register)
 app.use(`${Path.Login}`, login)
 app.use(`${Path.Auth}`, authMe)
