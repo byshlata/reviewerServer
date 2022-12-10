@@ -5,7 +5,6 @@ import { decipherToken } from "../utils";
 
 export const checkAuth = async (req, res, next) => {
     const token = req.cookies.access_token
-
     if (token) {
         try {
             const decodedToken = decipherToken(token, Secret.Secret)

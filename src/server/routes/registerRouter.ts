@@ -21,7 +21,6 @@ router.post<Empty, UserResponseType | ErrorResponseType, RegistrationType, Empty
         const login = req.body.login;
         const password = req.body.password;
         const userBase = await createUser({login, password, email})
-
         const token = createToken(userBase._id)
         const user = createUserSend(userBase)
         return res
