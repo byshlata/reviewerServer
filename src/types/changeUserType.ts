@@ -1,4 +1,4 @@
 export type ChangeUserType = {
-    image?: string,
+    avatar?: string,
     rating?: number,
 }

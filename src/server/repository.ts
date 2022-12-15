@@ -65,9 +65,9 @@ export const authUser = async (id: string): Promise<Nullable<UserServerType>> =>
     }
 }
 
-export const changeUser = async (id: string, data: ChangeUserType): Promise<Nullable<UserServerType>> => {
+export const changeUser = async (id: string, {avatar, rating}: ChangeUserType): Promise<Nullable<UserServerType>> => {
     try {
-        return await User.findByIdAndUpdate(id, data, { upsert: true })
+        return await User.findByIdAndUpdate(id, { avatar: avatar, rating: rating }, { upsert: true })
     } catch (error) {
         return null
     }

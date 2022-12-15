@@ -13,6 +13,7 @@ let s3 = new S3Client({
 });
 
 
+
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
@@ -26,12 +27,12 @@ const upload = multer({
     storage: multerS3({
         acl: 'public-read',
         s3,
-        bucket: process.env.AWS_PUBLIC_BUCKET_AVATAR_IMG,
+        bucket: 'avatar-public-image',
         metadata: function (req, file, cb) {
             cb(null, {fieldName: file.fieldname});
         },
         key: function (req, file, cb) {
-            cb(null, req.body.id)
+            cb(null, Date.now().toString()+file.originalname)
         }
     })
 });
