@@ -41,36 +41,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var repository_1 = require("../repository");
 var express_1 = __importDefault(require("express"));
-var errorMessage_1 = require("../../enums/errorMessage");
-var path_1 = require("../../enums/path");
+var enums_1 = require("../../enums/");
 var authValidation_1 = require("../../validation/authValidation");
 var express_validator_1 = require("express-validator");
+var utils_1 = require("../../utils");
 var router = express_1["default"].Router();
-router.post("".concat(path_1.Path.Root), authValidation_1.loginValidation, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, email, password, user, error_1;
+router.post("".concat(enums_1.Path.Root), authValidation_1.loginValidation, utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var errors, email, password, userBase, token, user, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 errors = (0, express_validator_1.validationResult)(req.body);
                 if (!errors.isEmpty()) {
-                    return [2 /*return*/, res.status(400).send({ message: errorMessage_1.ErrorMessage.CorrectEnter })];
+                    return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.CorrectEnter })];
                 }
                 email = req.body.email;
                 password = req.body.password;
                 return [4 /*yield*/, (0, repository_1.loginUser)({ password: password, email: email })];
             case 1:
-                user = _a.sent();
-                if (user.status === 'block') {
-                    return [2 /*return*/, res.status(403).send({
-                            message: errorMessage_1.ErrorMessage.Block,
-                            auth: false
-                        })];
+                userBase = _a.sent();
+                if (userBase) {
+                    token = (0, utils_1.createToken)(userBase._id);
+                    user = (0, utils_1.createUserSend)(userBase);
+                    return [2 /*return*/, user.status === 'block'
+                            ? res.status(403).send({
+                                message: enums_1.ErrorMessage.Block,
+                                auth: false
+                            })
+                            : res.status(200).cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).send({ user: user })];
                 }
-                return [2 /*return*/, res.status(200).send({ user: user })];
+                return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailOrPassword })];
             case 2:
                 error_1 = _a.sent();
-                return [2 /*return*/, res.status(400).send({ message: errorMessage_1.ErrorMessage.EmailOrPassword })];
+                return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailOrPassword })];
             case 3: return [2 /*return*/];
         }
     });

@@ -35,6 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 var mongoose_1 = require("mongoose");
 var path_1 = require("../enums/path");
@@ -42,15 +45,17 @@ var express = require('express');
 var cors = require('cors');
 var register = require('./routes/registerRouter');
 var login = require('./routes/loginRouter');
-var users = require('./routes/usersRouter');
 var authMe = require('./routes/authRouter');
+var uploadFile = require('./routes/uploadFileRouter');
 var config = require('dotenv').config;
+var cookie_parser_1 = __importDefault(require("cookie-parser"));
 config();
+/// mongodb://localhost:8080/userBase
 function run() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, mongoose_1.connect)('mongodb+srv://byshlata:wwwwww@userbase.zbjoeya.mongodb.net/userBase?retryWrites=true&w=majority')];
+                case 0: return [4 /*yield*/, (0, mongoose_1.connect)(process.env.DB_HOST)];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -71,10 +76,12 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use((0, cookie_parser_1["default"])());
+app.use('/privacy-policy', express.static('public'));
 app.use("".concat(path_1.Path.Register), register);
 app.use("".concat(path_1.Path.Login), login);
-app.use("".concat(path_1.Path.Users), users);
 app.use("".concat(path_1.Path.Auth), authMe);
+app.use("".concat(path_1.Path.UploadFile), uploadFile);
 var port = process.env.PORT || 5000;
 app.listen(port, function () {
     console.log("server is listening on port ".concat(port));

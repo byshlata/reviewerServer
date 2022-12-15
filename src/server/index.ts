@@ -4,7 +4,9 @@ const express = require('express')
 const cors = require('cors')
 const register = require('./routes/registerRouter')
 const login = require('./routes/loginRouter')
+const logout = require('./routes/logoutRouter')
 const authMe = require('./routes/authRouter')
+const uploadFile = require('./routes/uploadFileRouter')
 const { config } = require('dotenv')
 import cookieParser from 'cookie-parser';
 import { createDataLiveCookie } from "utils/createDataLiveCookie";
@@ -35,11 +37,13 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser());
 
-app.use('/privacy-policy', express.static('public'))
+app.use(`${Path.PrivacyPolicy}`, express.static('public'))
 
 app.use(`${Path.Register}`, register)
 app.use(`${Path.Login}`, login)
+app.use(`${Path.Logout}`, logout)
 app.use(`${Path.Auth}`, authMe)
+app.use(`${Path.UploadFile}`, uploadFile)
 
 const port = process.env.PORT || 5000
 

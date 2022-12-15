@@ -47,23 +47,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.authUser = exports.loginUser = exports.createUser = exports.updateSomeUsers = exports.updateUserData = exports.deleteSomeUsers = exports.getUserById = exports.getUserByEmail = exports.getUsers = void 0;
+exports.authUser = exports.loginUser = exports.createUser = exports.getUserById = exports.getUserByEmail = void 0;
 var user_1 = require("../models/user");
-var createAuthUserData_1 = require("../utils/createAuthUserData");
 var throwError_1 = require("../utils/throwError");
-var createUsersData_1 = require("../utils/createUsersData");
-var createData_1 = require("../utils/createData");
+var enums_1 = require("../enums");
 var bcrypt = require("bcrypt");
-var getUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var users, error_1;
+var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.find()];
-            case 1:
-                users = _a.sent();
-                return [2 /*return*/, users.map(function (user) { return (0, createUsersData_1.createUsersData)(user); })];
+                return [4 /*yield*/, user_1.User.findOne({ email: new RegExp(email) })];
+            case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_1 = _a.sent();
                 (0, throwError_1.throwError)();
@@ -72,14 +68,14 @@ var getUsers = function () { return __awaiter(void 0, void 0, void 0, function (
         }
     });
 }); };
-exports.getUsers = getUsers;
-var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
+exports.getUserByEmail = getUserByEmail;
+var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.findOne({ email: new RegExp(email) })];
+                return [4 /*yield*/, user_1.User.findById(id)];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_2 = _a.sent();
@@ -89,89 +85,15 @@ var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.getUserByEmail = getUserByEmail;
-var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.findById(id)];
-            case 1: return [2 /*return*/, _a.sent()];
-            case 2:
-                error_3 = _a.sent();
-                (0, throwError_1.throwError)();
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
 exports.getUserById = getUserById;
-var deleteSomeUsers = function (users) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, user_1.User.deleteMany({ _id: { $in: users.id } })];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, (0, exports.getUsers)()];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3:
-                error_4 = _a.sent();
-                return [2 /*return*/, (0, throwError_1.throwError)()];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.deleteSomeUsers = deleteSomeUsers;
-var updateUserData = function (id, updateData) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_5;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.findByIdAndUpdate(id, updateData, { upsert: true })];
-            case 1: return [2 /*return*/, _a.sent()];
-            case 2:
-                error_5 = _a.sent();
-                (0, throwError_1.throwError)();
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.updateUserData = updateUserData;
-var updateSomeUsers = function (users, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_6;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, user_1.User.updateMany({ _id: { $in: users } }, { $set: { status: data } })];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, (0, exports.getUsers)()];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3:
-                error_6 = _a.sent();
-                return [2 /*return*/, (0, throwError_1.throwError)()];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-exports.updateSomeUsers = updateSomeUsers;
 var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var timeLastLogin, status_1, userNew, salt, _a, user, creatingUser, userSend, error_7;
+    var userNew, salt, _a, user, error_3;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 5, , 6]);
-                timeLastLogin = new Date();
-                status_1 = 'active';
-                userNew = __assign(__assign({}, payload), { timeLastLogin: timeLastLogin, status: status_1 });
-                return [4 /*yield*/, bcrypt.genSalt(10)];
+                _b.trys.push([0, 4, , 5]);
+                userNew = __assign({}, payload);
+                return [4 /*yield*/, bcrypt.genSalt(enums_1.Secret.Salt)];
             case 1:
                 salt = _b.sent();
                 _a = userNew;
@@ -180,70 +102,61 @@ var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, f
                 _a.password = _b.sent();
                 user = new user_1.User(__assign({}, userNew));
                 return [4 /*yield*/, user.save()];
-            case 3:
-                creatingUser = _b.sent();
-                userSend = (0, createAuthUserData_1.createAuthUserData)(creatingUser);
-                return [4 /*yield*/, userSend];
-            case 4: return [2 /*return*/, _b.sent()];
+            case 3: return [2 /*return*/, _b.sent()];
+            case 4:
+                error_3 = _b.sent();
+                (0, throwError_1.throwError)();
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.createUser = createUser;
+var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, isValidPassword, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, exports.getUserByEmail)(payload.email)];
+            case 1:
+                user = _a.sent();
+                if (!user) return [3 /*break*/, 3];
+                return [4 /*yield*/, bcrypt.compare(payload.password, user.password)];
+            case 2:
+                isValidPassword = _a.sent();
+                return [2 /*return*/, isValidPassword ? user : (0, throwError_1.throwError)()];
+            case 3: return [2 /*return*/, null];
+            case 4: return [3 /*break*/, 6];
             case 5:
-                error_7 = _b.sent();
+                error_4 = _a.sent();
                 (0, throwError_1.throwError)();
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }
     });
 }); };
-exports.createUser = createUser;
-var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, isValidPassword, userUpdate, userSend, error_8;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 9, , 10]);
-                return [4 /*yield*/, (0, exports.getUserByEmail)(payload.email)];
-            case 1:
-                user = _a.sent();
-                if (!user) return [3 /*break*/, 7];
-                return [4 /*yield*/, bcrypt.compare(payload.password, user.password)];
-            case 2:
-                isValidPassword = _a.sent();
-                if (!isValidPassword) return [3 /*break*/, 5];
-                return [4 /*yield*/, (0, exports.updateUserData)(user._id, { timeLastLogin: (0, createData_1.createData)() })];
-            case 3:
-                userUpdate = _a.sent();
-                userSend = (0, createAuthUserData_1.createAuthUserData)(userUpdate);
-                return [4 /*yield*/, userSend];
-            case 4: return [2 /*return*/, _a.sent()];
-            case 5: return [2 /*return*/, (0, throwError_1.throwError)()];
-            case 6: return [3 /*break*/, 8];
-            case 7: return [2 /*return*/, (0, throwError_1.throwError)()];
-            case 8: return [3 /*break*/, 10];
-            case 9:
-                error_8 = _a.sent();
-                (0, throwError_1.throwError)();
-                return [3 /*break*/, 10];
-            case 10: return [2 /*return*/];
-        }
-    });
-}); };
 exports.loginUser = loginUser;
 var authUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, userSend, error_9;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var user, _a, error_5;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _b.trys.push([0, 5, , 6]);
                 return [4 /*yield*/, (0, exports.getUserById)(id)];
             case 1:
-                user = _a.sent();
+                user = _b.sent();
                 if (!user) return [3 /*break*/, 3];
-                userSend = (0, createAuthUserData_1.createAuthUserData)(user);
-                return [4 /*yield*/, userSend];
-            case 2: return [2 /*return*/, _a.sent()];
-            case 3: return [2 /*return*/, null];
-            case 4: return [3 /*break*/, 6];
+                return [4 /*yield*/, user];
+            case 2:
+                _a = _b.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                _a = null;
+                _b.label = 4;
+            case 4: return [2 /*return*/, _a];
             case 5:
-                error_9 = _a.sent();
+                error_5 = _b.sent();
                 return [2 /*return*/, null];
             case 6: return [2 /*return*/];
         }

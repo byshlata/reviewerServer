@@ -41,31 +41,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var repository_1 = require("../repository");
 var express_1 = __importDefault(require("express"));
-var path_1 = require("../../enums/path");
-var errorMessage_1 = require("../../enums/errorMessage");
+var enums_1 = require("../../enums");
 var authValidation_1 = require("../../validation/authValidation");
 var express_validator_1 = require("express-validator");
+var utils_1 = require("../../utils");
 var router = express_1["default"].Router();
-router.post("".concat(path_1.Path.Root), authValidation_1.registerValidation, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, email, name_1, password, user, error_1;
+router.post("".concat(enums_1.Path.Root), authValidation_1.registerValidation, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var errors, email, login, password, userBase, token, user, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 errors = (0, express_validator_1.validationResult)(req.body);
                 if (!errors.isEmpty()) {
-                    return [2 /*return*/, res.status(400).send({ message: errorMessage_1.ErrorMessage.CorrectEnter })];
+                    return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.CorrectEnter })];
                 }
                 email = req.body.email;
-                name_1 = req.body.name;
+                login = req.body.login;
                 password = req.body.password;
-                return [4 /*yield*/, (0, repository_1.createUser)({ name: name_1, password: password, email: email })];
+                return [4 /*yield*/, (0, repository_1.createUser)({ login: login, password: password, email: email })];
             case 1:
-                user = _a.sent();
-                return [2 /*return*/, res.status(200).send({ user: user })];
+                userBase = _a.sent();
+                token = (0, utils_1.createToken)(userBase._id);
+                user = (0, utils_1.createUserSend)(userBase);
+                return [2 /*return*/, res
+                        .cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)())
+                        .status(200)
+                        .send({ user: user })];
             case 2:
                 error_1 = _a.sent();
-                return [2 /*return*/, res.status(400).send({ message: errorMessage_1.ErrorMessage.EmailIsUse })];
+                return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailIsUse })];
             case 3: return [2 /*return*/];
         }
     });

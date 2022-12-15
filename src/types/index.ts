@@ -24,3 +24,5 @@ export type { RegistrationType } from './RegistrationType'
 export type  { UserInformationType } from 'types/UserInformationType'
 
 export type { UserServerType } from './UserServerType'
+
+export type { AppSettingsType } from './AppSettingsType'

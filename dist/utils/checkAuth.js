@@ -38,25 +38,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.checkAuth = void 0;
 var enums_1 = require("../enums");
-var secret_1 = require("../enums/secret");
 var repository_1 = require("../server/repository");
-var decipherToken_1 = require("../utils/decipherToken");
-var sliceToken_1 = require("../utils/sliceToken");
+var utils_1 = require("../utils");
 var checkAuth = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var token, decodedToken, user, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                token = (0, sliceToken_1.sliceToken)(req.headers.authorization);
+                token = req.cookies.access_token;
                 if (!token) return [3 /*break*/, 5];
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                decodedToken = (0, decipherToken_1.decipherToken)(token, secret_1.Secret.Secret);
+                decodedToken = (0, utils_1.decipherToken)(token, enums_1.Secret.Secret);
                 return [4 /*yield*/, (0, repository_1.authUser)(decodedToken)];
             case 2:
                 user = _a.sent();
-                if (user && user.status === 'block') {
+                if (user && user.status === enums_1.Status.Block) {
                     return [2 /*return*/, res.status(403).send({
                             message: enums_1.ErrorMessage.Block,
                             auth: false
@@ -68,7 +66,7 @@ var checkAuth = function (req, res, next) { return __awaiter(void 0, void 0, voi
                             auth: false
                         })];
                 }
-                req.body.userId = decodedToken;
+                req.body.id = decodedToken;
                 next();
                 return [3 /*break*/, 4];
             case 3:

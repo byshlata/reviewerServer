@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,30 +35,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.createAuthUserData = void 0;
-var secret_1 = require("../enums/secret");
-var jwt = require('jsonwebtoken');
-var createAuthUserData = function (user) { return __awaiter(void 0, void 0, void 0, function () {
-    var userInstance, token, password, otherUserData;
+var express_1 = __importDefault(require("express"));
+var enums_1 = require("../../enums");
+var upload = require('../amazonCloud/amazonCloud');
+var router = express_1["default"].Router();
+var singleUpload = upload.single('image');
+router.get("".concat(enums_1.Path.Root), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        userInstance = JSON.parse(JSON.stringify(user));
-        token = jwt.sign({
-            _id: userInstance._id
-        }, secret_1.Secret.Secret, { expiresIn: '30d' });
-        password = userInstance.password, otherUserData = __rest(userInstance, ["password"]);
-        return [2 /*return*/, Promise.resolve(__assign({ token: token }, otherUserData))];
+        try {
+            singleUpload(req, res, function (err, some) {
+                var _a;
+                if (err) {
+                    return res.status(422).send({ message: 'Error' });
+                }
+                // @ts-ignore
+                console.log((_a = req.file) === null || _a === void 0 ? void 0 : _a.location);
+                //return res.json({'imageUrl': req.file.location});
+            });
+        }
+        catch (error) {
+            return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
+        }
+        return [2 /*return*/];
     });
-}); };
-exports.createAuthUserData = createAuthUserData;
+}); });
+module.exports = router;

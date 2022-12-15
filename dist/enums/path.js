@@ -8,4 +8,5 @@ var Path;
     Path["Register"] = "/register";
     Path["Login"] = "/login";
     Path["Auth"] = "/auth";
+    Path["UploadFile"] = "/uploadImage";
 })(Path = exports.Path || (exports.Path = {}));

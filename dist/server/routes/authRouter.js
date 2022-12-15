@@ -40,30 +40,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
-var errorMessage_1 = require("../../enums/errorMessage");
-var path_1 = require("../../enums/path");
-var checkAuth_1 = require("../../utils/checkAuth");
+var enums_1 = require("../../enums");
+var utils_1 = require("../../utils");
 var repository_1 = require("../repository");
 var router = express_1["default"].Router();
-router.get("".concat(path_1.Path.Root), checkAuth_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, error_1;
+router.get("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userBase, token, user, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, repository_1.authUser)(req.body.userId)];
+                return [4 /*yield*/, (0, repository_1.authUser)(req.body.id)];
             case 1:
-                user = _a.sent();
-                if (user) {
-                    return [2 /*return*/, res.status(200).send({ user: user })];
-                }
-                else {
-                    return [2 /*return*/, res.status(401).send({ message: errorMessage_1.ErrorMessage.Authorized })];
-                }
-                return [3 /*break*/, 3];
+                userBase = _a.sent();
+                token = (0, utils_1.createToken)(userBase._id);
+                user = (0, utils_1.createUserSend)(userBase);
+                return [2 /*return*/, user
+                        ? res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({ user: user })
+                        : res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
             case 2:
                 error_1 = _a.sent();
-                return [2 /*return*/, res.status(401).send({ message: errorMessage_1.ErrorMessage.Authorized })];
+                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
             case 3: return [2 /*return*/];
         }
     });

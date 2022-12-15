@@ -14,7 +14,7 @@ router.get<Empty, UserResponseType | ErrorResponseType, IdType, Empty>(`${Path.R
         const user = createUserSend(userBase)
         return user
         ? res.cookie(Secret.NameToken, token, createCookieOption()).status(200).send({ user })
-        : res.status(401).send({ message: ErrorMessage.Authorized })
+        : res.send({ user: null })
     } catch (error) {
         return res.status(401).send({ message: ErrorMessage.Authorized })
     }

@@ -9,7 +9,7 @@ import { checkAuth, createCookieOption, createToken, createUserSend } from "../.
 
 const router = express.Router();
 
-router.post<Empty, UserResponseType | ErrorResponseType, LoginType, Empty>(`${Path.Root}`, loginValidation, checkAuth,  async (req, res) => {
+router.post<Empty, UserResponseType | ErrorResponseType, LoginType, Empty>(`${Path.Root}`, loginValidation, async (req, res) => {
     try {
         const errors = validationResult(req.body);
         if (!errors.isEmpty()) {
