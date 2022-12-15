@@ -7,6 +7,7 @@ const login = require('./routes/loginRouter')
 const logout = require('./routes/logoutRouter')
 const authMe = require('./routes/authRouter')
 const uploadFile = require('./routes/uploadFileRouter')
+const changeAvatar = require('./routes/changeAvatar')
 const { config } = require('dotenv')
 import cookieParser from 'cookie-parser';
 import { createDataLiveCookie } from "utils/createDataLiveCookie";
@@ -43,6 +44,7 @@ app.use(`${Path.Register}`, register)
 app.use(`${Path.Login}`, login)
 app.use(`${Path.Logout}`, logout)
 app.use(`${Path.Auth}`, authMe)
+app.use(`${Path.ChangeAvatar}`, changeAvatar)
 app.use(`${Path.UploadFile}`, uploadFile)
 
 const port = process.env.PORT || 5000

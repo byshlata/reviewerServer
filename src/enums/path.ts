@@ -6,5 +6,6 @@ export enum Path {
     Login = '/login',
     Logout = '/logout',
     Auth = '/auth',
-    UploadFile = '/uploadImage'
+    UploadFile = '/uploadImage',
+    ChangeAvatar = '/change-avatar'
 }

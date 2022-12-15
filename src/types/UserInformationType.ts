@@ -1,6 +1,7 @@
 import { RightsType, StatusType } from "types";
 
 export type UserInformationType = {
+    avatar: string,
     login: string,
     email: string,
     password: string,
@@ -8,5 +9,6 @@ export type UserInformationType = {
     updatedAt: string,
     status: StatusType,
     rights: RightsType,
+    rating: number
 }
 

@@ -5,6 +5,7 @@ import {
 import { User } from "../models/user";
 import { throwError } from "../utils/throwError"
 import { Secret } from "../enums";
+import { ChangeUserType } from "types/changeUserType";
 
 const bcrypt = require("bcrypt");
 
@@ -59,6 +60,14 @@ export const authUser = async (id: string): Promise<Nullable<UserServerType>> =>
 
         return user ? await user : null
 
+    } catch (error) {
+        return null
+    }
+}
+
+export const changeUser = async (id: string, data: ChangeUserType): Promise<Nullable<UserServerType>> => {
+    try {
+        return await User.findByIdAndUpdate(id, data, { upsert: true })
     } catch (error) {
         return null
     }
