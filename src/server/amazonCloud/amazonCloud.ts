@@ -5,10 +5,10 @@ const multerS3 = require('multer-s3');
 
 
 let s3 = new S3Client({
-    region: 'eu-north-1',
+    region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: "AKIAZ2H2CHOLE5IQ2XTL",
-        secretAccessKey: "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",
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
 });
 
@@ -26,7 +26,7 @@ const upload = multer({
     storage: multerS3({
         acl: 'public-read',
         s3,
-        bucket: 'avatar-public-image',
+        bucket: process.env.AWS_PUBLIC_BUCKET_AVATAR_IMG,
         metadata: function (req, file, cb) {
             cb(null, {fieldName: file.fieldname});
         },
