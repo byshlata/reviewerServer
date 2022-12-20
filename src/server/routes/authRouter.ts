@@ -16,8 +16,6 @@ import {
 } from "../../utils";
 import { authUser } from "../../server/repository";
 
-
-
 const router = express.Router();
 
 router.get<Empty, UserResponseType & AppSettingsResponseType | ErrorResponseType, IdType, Empty>(`${Path.Root}`, checkAuth, async (req, res) => {
