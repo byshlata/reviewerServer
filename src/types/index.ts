@@ -36,10 +36,10 @@ export type { AppSettingsSendType } from './AppSettingsSendType'
 
 export type { AppSettingsResponseType } from './AppSettingsResponseType'
 
-export type { ChangeUserType } from './ChangeUserType'
-
 export type { ReviewSendType } from './ReviewSendType'
 
 export type { ReviewsSomeSendType } from './ReviewsSomeSendType'
 
 export type { SortQueryParamsType } from './SortQueryParamsType'
+
+export type { ChangeUserType } from './ChangeUserType'
