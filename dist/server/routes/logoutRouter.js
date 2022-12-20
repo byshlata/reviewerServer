@@ -39,56 +39,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var mongoose_1 = require("mongoose");
-var path_1 = require("../enums/path");
-var express = require('express');
-var cors = require('cors');
-var register = require('./routes/registerRouter');
-var login = require('./routes/loginRouter');
-var logout = require('./routes/logoutRouter');
-var authMe = require('./routes/authRouter');
-var createReview = require('./routes/createReview');
-var changeAvatar = require('./routes/changeAvatar');
-var getSortByDataReview = require('./routes/reviewSortByData');
-var config = require('dotenv').config;
-var cookie_parser_1 = __importDefault(require("cookie-parser"));
-config();
-/// mongodb://localhost:8080/userBase
-function run() {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, mongoose_1.connect)(process.env.DB_HOST)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
+var express_1 = __importDefault(require("express"));
+var enums_1 = require("../../enums");
+var utils_1 = require("../../utils");
+var router = express_1["default"].Router();
+router.get("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        try {
+            return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, 0, (0, utils_1.createCookieOption)()).status(200).send({ message: enums_1.ErrorMessage.Success })];
+        }
+        catch (error) {
+            return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
+        }
+        return [2 /*return*/];
     });
-}
-run()["catch"](function (err) { return console.log(err); });
-var app = express();
-process.on('unhandledRejection', function (reason, p) {
-    console.log(reason, p);
-});
-var corsOptions = {
-    origin: ["https://byshlata.github.io", "http://localhost:3000"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-    methods: ['GET', 'PUT', 'POST', 'DELETE']
-};
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use((0, cookie_parser_1["default"])());
-app.use("".concat(path_1.Path.PrivacyPolicy), express.static('public'));
-app.use("".concat(path_1.Path.Register), register);
-app.use("".concat(path_1.Path.Login), login);
-app.use("".concat(path_1.Path.Logout), logout);
-app.use("".concat(path_1.Path.Auth), authMe);
-app.use("".concat(path_1.Path.ChangeAvatar), changeAvatar);
-app.use("".concat(path_1.Path.CreateReview), createReview);
-app.use("".concat(path_1.Path.Reviews), getSortByDataReview);
-var port = process.env.PORT || 5050;
-app.listen(port, function () {
-    console.log("server is listening on port ".concat(port));
-});
+}); });
+module.exports = router;

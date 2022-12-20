@@ -47,10 +47,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.authUser = exports.loginUser = exports.createUser = exports.getUserById = exports.getUserByEmail = void 0;
-var user_1 = require("../models/user");
-var throwError_1 = require("../utils/throwError");
-var enums_1 = require("../enums");
+exports.changeUser = exports.authUser = exports.loginUser = exports.createUser = exports.getUserById = exports.getUserByEmail = void 0;
+var models_1 = require("../../models");
+var utils_1 = require("../../utils");
+var enums_1 = require("../../enums");
 var bcrypt = require("bcrypt");
 var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
     var error_1;
@@ -58,11 +58,11 @@ var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0,
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.findOne({ email: new RegExp(email) })];
+                return [4 /*yield*/, models_1.User.findOne({ email: new RegExp(email) })];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_1 = _a.sent();
-                (0, throwError_1.throwError)();
+                (0, utils_1.throwError)();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -75,11 +75,11 @@ var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, funct
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_1.User.findById(id)];
+                return [4 /*yield*/, models_1.User.findById(id)];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_2 = _a.sent();
-                (0, throwError_1.throwError)();
+                (0, utils_1.throwError)();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -100,12 +100,12 @@ var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, bcrypt.hash(userNew.password, salt)];
             case 2:
                 _a.password = _b.sent();
-                user = new user_1.User(__assign({}, userNew));
+                user = new models_1.User(__assign({}, userNew));
                 return [4 /*yield*/, user.save()];
             case 3: return [2 /*return*/, _b.sent()];
             case 4:
                 error_3 = _b.sent();
-                (0, throwError_1.throwError)();
+                (0, utils_1.throwError)();
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -125,12 +125,12 @@ var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, fu
                 return [4 /*yield*/, bcrypt.compare(payload.password, user.password)];
             case 2:
                 isValidPassword = _a.sent();
-                return [2 /*return*/, isValidPassword ? user : (0, throwError_1.throwError)()];
+                return [2 /*return*/, isValidPassword ? user : (0, utils_1.throwError)()];
             case 3: return [2 /*return*/, null];
             case 4: return [3 /*break*/, 6];
             case 5:
                 error_4 = _a.sent();
-                (0, throwError_1.throwError)();
+                (0, utils_1.throwError)();
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
         }
@@ -163,3 +163,22 @@ var authUser = function (id) { return __awaiter(void 0, void 0, void 0, function
     });
 }); };
 exports.authUser = authUser;
+var changeUser = function (id, _a) {
+    var avatar = _a.avatar, rating = _a.rating;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var error_6;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.User.findByIdAndUpdate(id, { avatar: avatar, rating: rating }, { "new": true })];
+                case 1: return [2 /*return*/, _b.sent()];
+                case 2:
+                    error_6 = _b.sent();
+                    return [2 /*return*/, null];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.changeUser = changeUser;
