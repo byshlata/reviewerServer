@@ -7,5 +7,8 @@ export enum Path {
     Logout = '/logout',
     Auth = '/auth',
     UploadFile = '/uploadImage',
-    ChangeAvatar = '/change-avatar'
+    ChangeAvatar = '/change-avatar',
+    CreateReview = '/create-review',
+    Reviews = '/reviews',
+    ReviewsSortData = '/reviews-sort-data',
 }

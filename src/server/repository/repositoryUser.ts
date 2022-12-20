@@ -1,16 +1,16 @@
 import {
     LoginType,
-    Nullable, RegistrationType, UserServerType,
+    Nullable, RegistrationType, UserServerType, ChangeUserType
 } from "types";
-import { User } from "../models/user";
-import { throwError } from "../utils/throwError"
-import { Secret } from "../enums";
-import { ChangeUserType } from "types/changeUserType";
+import { User } from "../../models";
+import { throwError } from "../../utils"
+import { Secret } from "../../enums";
 
 const bcrypt = require("bcrypt");
 
 export const getUserByEmail = async (email: string): Promise<UserServerType> => {
     try {
+
         return await User.findOne({ email: new RegExp(email) });
     } catch (error) {
         throwError()
@@ -19,6 +19,7 @@ export const getUserByEmail = async (email: string): Promise<UserServerType> => 
 
 export const getUserById = async (id: string): Promise<UserServerType> => {
     try {
+
         return await User.findById(id);
     } catch (error) {
         throwError()
@@ -59,7 +60,6 @@ export const authUser = async (id: string): Promise<Nullable<UserServerType>> =>
         const user = await getUserById(id)
 
         return user ? await user : null
-
     } catch (error) {
         return null
     }
@@ -67,7 +67,7 @@ export const authUser = async (id: string): Promise<Nullable<UserServerType>> =>
 
 export const changeUser = async (id: string, {avatar, rating}: ChangeUserType): Promise<Nullable<UserServerType>> => {
     try {
-        return await User.findByIdAndUpdate(id, { avatar: avatar, rating: rating }, { upsert: true })
+        return  await User.findByIdAndUpdate(id, { avatar: avatar, rating: rating }, {new: true})
     } catch (error) {
         return null
     }

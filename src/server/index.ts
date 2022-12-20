@@ -6,8 +6,9 @@ const register = require('./routes/registerRouter')
 const login = require('./routes/loginRouter')
 const logout = require('./routes/logoutRouter')
 const authMe = require('./routes/authRouter')
-const uploadFile = require('./routes/uploadFileRouter')
+const createReview = require('./routes/createReview')
 const changeAvatar = require('./routes/changeAvatar')
+const getSortByDataReview = require('./routes/reviewSortByData')
 const { config } = require('dotenv')
 import cookieParser from 'cookie-parser';
 import { createDataLiveCookie } from "utils/createDataLiveCookie";
@@ -33,7 +34,6 @@ const corsOptions = {
 }
 
 
-
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser());
@@ -45,9 +45,10 @@ app.use(`${Path.Login}`, login)
 app.use(`${Path.Logout}`, logout)
 app.use(`${Path.Auth}`, authMe)
 app.use(`${Path.ChangeAvatar}`, changeAvatar)
-app.use(`${Path.UploadFile}`, uploadFile)
+app.use(`${Path.CreateReview}`, createReview)
+app.use(`${Path.Reviews}`, getSortByDataReview)
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5050
 
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);

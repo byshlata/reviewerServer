@@ -7,3 +7,7 @@ export { Secret } from './secret'
 export { Status } from './status'
 
 export { Rights } from './rights'
+
+export { AppSettingsEnum } from './appSettingsEnum'
+
+export { QueryAPI } from './queryAPI'

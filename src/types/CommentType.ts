@@ -3,7 +3,7 @@ export type CommentType = {
     idAuthor: string;
     text: string;
     imageAuthor: string;
-    nameAuthor: string;
+    loginAuthor: string;
     createdAt: string;
     updatedAt: string;
     _v: number;

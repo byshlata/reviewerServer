@@ -3,7 +3,7 @@ exports.__esModule = true;
 exports.ErrorMessage = void 0;
 var ErrorMessage;
 (function (ErrorMessage) {
-    ErrorMessage["UserNotFound"] = "User not found.";
+    ErrorMessage["UserNotFound"] = "UserSchema not found.";
     ErrorMessage["EmailIsUse"] = "This email address is already in use.";
     ErrorMessage["EmailOrPassword"] = "Password or email is not correct.";
     ErrorMessage["CorrectEnter"] = "Data is not correct";

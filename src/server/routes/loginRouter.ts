@@ -1,15 +1,26 @@
-import { loginUser } from "../repository";
+import { loginUser } from "../../server/repository";
 import express from "express";
-import { Empty, ErrorResponseType, LoginType, UserResponseType } from "types";
+import {
+    AppSettingsResponseType,
+    Empty,
+    ErrorResponseType,
+    LoginType,
+    UserResponseType
+} from "types";
 import { ErrorMessage, Path, Secret } from '../../enums/'
 import { loginValidation } from '../../validation/authValidation'
 import { validationResult } from 'express-validator'
-import { checkAuth, createCookieOption, createToken, createUserSend } from "../../utils";
+import {
+    createCookieOption,
+    createToken,
+    createUserSend,
+    getAppSettingsHelper
+} from "../../utils";
 
 
 const router = express.Router();
 
-router.post<Empty, UserResponseType | ErrorResponseType, LoginType, Empty>(`${Path.Root}`, loginValidation, async (req, res) => {
+router.post<Empty, UserResponseType & AppSettingsResponseType | ErrorResponseType, LoginType, Empty>(`${Path.Root}`, loginValidation, async (req, res) => {
     try {
         const errors = validationResult(req.body);
         if (!errors.isEmpty()) {
@@ -21,13 +32,13 @@ router.post<Empty, UserResponseType | ErrorResponseType, LoginType, Empty>(`${Pa
         if (userBase) {
             const token = createToken(userBase._id)
             const user = createUserSend(userBase)
-
+            const appSettings = await getAppSettingsHelper()
             return user.status === 'block'
                 ? res.status(403).send({
                     message: ErrorMessage.Block,
                     auth: false
                 })
-                : res.status(200).cookie(Secret.NameToken, token, createCookieOption()).send({user})
+                : res.status(200).cookie(Secret.NameToken, token, createCookieOption()).send({user, appSettings })
         }
         return res.status(400).send({message: ErrorMessage.EmailOrPassword})
     } catch (error) {

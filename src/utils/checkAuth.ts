@@ -2,7 +2,6 @@ import { ErrorMessage, Secret, Status} from "../enums";
 import { authUser } from "../server/repository";
 import { decipherToken } from "../utils";
 
-
 export const checkAuth = async (req, res, next) => {
     const token = req.cookies.access_token
     if (token) {

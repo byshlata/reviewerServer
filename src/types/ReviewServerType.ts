@@ -3,18 +3,18 @@ import { ReviewRatingStarType } from "types/ReviewRatingStarType";
 import { ReviewRatingLikeType } from "types/ReviewRatingLikeType";
 import { CommentType } from "./CommentType";
 
-export type ReviewType = {
+export type ReviewServerType = {
     _id: string;
     idAuthor: string;
     titleMain: string;
     titleAbout: string;
     category: string;
     tag: string[];
-    text: string;
+    reviewText: string;
     image?: string;
-    ratingAuthor: Nullable<number>;
-    ratingArticle: ReviewRatingStarType;
-    likeArticle: ReviewRatingLikeType;
+    authorAssessment: Nullable<number>;
+    ratingStar: ReviewRatingStarType;
+    ratingLike: ReviewRatingLikeType;
     createdAt: string;
     updatedAt: string;
     comments: CommentType[];
