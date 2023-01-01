@@ -30,4 +30,4 @@ export { countAverageRating } from './countAverageRating'
 
 export { isStatusRating } from './isStatusRating'
 
-export { createAdminTableResponse } from './CreateAdminTableResponse'
+export { createAdminTableResponse } from './createAdminTableResponse'

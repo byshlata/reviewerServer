@@ -44,5 +44,5 @@ var countAverageRating_1 = require("./countAverageRating");
 __createBinding(exports, countAverageRating_1, "countAverageRating");
 var isStatusRating_1 = require("./isStatusRating");
 __createBinding(exports, isStatusRating_1, "isStatusRating");
-var CreateAdminTableResponse_1 = require("./CreateAdminTableResponse");
-__createBinding(exports, CreateAdminTableResponse_1, "createAdminTableResponse");
+var createAdminTableResponse_1 = require("./createAdminTableResponse");
+__createBinding(exports, createAdminTableResponse_1, "createAdminTableResponse");
