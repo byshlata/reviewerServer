@@ -35,19 +35,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-exports.getAppSettingsHelper = void 0;
-var repository_1 = require("../server/repository");
-var utils_1 = require("../utils");
-var getAppSettingsHelper = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var appSettingsBase;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+var express_1 = __importDefault(require("express"));
+var enums_1 = require("../../enums");
+var utils_1 = require("../../utils");
+var repository_1 = require("../../server/repository");
+var router = express_1["default"].Router();
+router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, idReview, numberStar, id, userBase, _b, user, token, appSettings, error_1;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 4, , 5]);
+                _a = req.body, idReview = _a.idReview, numberStar = _a.numberStar, id = _a.id;
+                return [4 /*yield*/, (0, repository_1.setStar)({ idReview: idReview, id: id, numberStar: numberStar })];
             case 1:
-                appSettingsBase = _a.sent();
-                return [2 /*return*/, (0, utils_1.createAppSend)(appSettingsBase)];
+                _c.sent();
+                return [4 /*yield*/, (0, repository_1.getUserById)(req.body.id)];
+            case 2:
+                userBase = _c.sent();
+                _b = (0, utils_1.createTokenAndUserSend)(userBase), user = _b.user, token = _b.token;
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+            case 3:
+                appSettings = _c.sent();
+                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
+                        user: user,
+                        appSettings: appSettings
+                    })];
+            case 4:
+                error_1 = _c.sent();
+                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
+            case 5: return [2 /*return*/];
         }
     });
-}); };
-exports.getAppSettingsHelper = getAppSettingsHelper;
+}); });
+module.exports = router;

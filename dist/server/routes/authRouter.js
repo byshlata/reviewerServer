@@ -45,24 +45,29 @@ var utils_1 = require("../../utils");
 var repository_1 = require("../../server/repository");
 var router = express_1["default"].Router();
 router.get("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userBase, token, user, appSettings, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var userBase, _a, user, token, appSettings, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, (0, repository_1.authUser)(req.body.id)];
+                _b.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, (0, repository_1.getUserById)(req.body.id)];
             case 1:
-                userBase = _a.sent();
-                token = (0, utils_1.createToken)(userBase._id);
-                user = (0, utils_1.createUserSend)(userBase);
-                return [4 /*yield*/, (0, utils_1.getAppSettingsHelper)()];
+                userBase = _b.sent();
+                _a = (0, utils_1.createTokenAndUserSend)(userBase), user = _a.user, token = _a.token;
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
             case 2:
-                appSettings = _a.sent();
+                appSettings = _b.sent();
                 return [2 /*return*/, user
-                        ? res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({ user: user, appSettings: appSettings })
-                        : res.send({ user: user, appSettings: appSettings })];
+                        ? res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
+                            user: user,
+                            appSettings: appSettings
+                        })
+                        : res.cookie(enums_1.Secret.NameToken, 0, (0, utils_1.createCookieOption)()).status(200).send({
+                            user: user,
+                            appSettings: appSettings
+                        })];
             case 3:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
             case 4: return [2 /*return*/];
         }

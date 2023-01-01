@@ -42,28 +42,33 @@ exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
-var repositoryReview_1 = require("../../server/repository/repositoryReview");
+var repository_1 = require("../../server/repository");
 var router = express_1["default"].Router();
-router.get("".concat(enums_1.Path.ReviewsSortData), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, token, reviews, appSettings, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, id, textComment, idReview, review, reviewSend, token, appSettings, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                console.log('query');
-                query = req.query;
-                token = (0, utils_1.createToken)(req.body.id);
-                return [4 /*yield*/, (0, repositoryReview_1.sortReview)(query[enums_1.QueryAPI.Count], query[enums_1.QueryAPI.Sort])];
+                _b.trys.push([0, 4, , 5]);
+                _a = req.body, id = _a.id, textComment = _a.textComment, idReview = _a.idReview;
+                if (!id) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, repository_1.addComment)({ id: id, textComment: textComment, idReview: idReview })];
             case 1:
-                reviews = _a.sent();
-                return [4 /*yield*/, (0, utils_1.getAppSettingsHelper)()];
+                review = _b.sent();
+                reviewSend = (0, utils_1.createReviewSend)(review);
+                token = (0, utils_1.createToken)(id);
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
             case 2:
-                appSettings = _a.sent();
-                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({ appSettings: appSettings, reviews: reviews })];
-            case 3:
-                error_1 = _a.sent();
+                appSettings = _b.sent();
+                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
+                        appSettings: appSettings,
+                        review: reviewSend
+                    })];
+            case 3: return [3 /*break*/, 5];
+            case 4:
+                error_1 = _b.sent();
                 return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

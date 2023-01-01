@@ -1,14 +1,23 @@
 import express from "express";
-import { Empty, ErrorResponseType, IdType } from "types";
+import {
+    AppSettingsResponseType,
+    Empty,
+    ErrorResponseType,
+    IdType,
+    UserResponseType
+} from "types";
 import { ErrorMessage, Path, Secret } from '../../enums'
 import { checkAuth, createCookieOption } from "../../utils";
+import { getAppSetting } from "../../server/repository";
 
 
 const router = express.Router();
 
-router.get<Empty, ErrorResponseType, IdType, Empty>(`${Path.Root}`, checkAuth, async (req, res) => {
+router.post<Empty, ErrorResponseType | UserResponseType & AppSettingsResponseType, IdType, Empty>(`${ Path.Root }`, checkAuth, async (req, res) => {
     try {
-        return res.cookie(Secret.NameToken, 0, createCookieOption()).status(200).send({ message: ErrorMessage.Success })
+        const appSettings = await getAppSetting()
+
+        return res.cookie(Secret.NameToken, 0, createCookieOption()).status(200).send({ user: null, appSettings })
     } catch (error) {
         return res.status(500).send({ message: ErrorMessage.ServerError })
     }

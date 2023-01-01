@@ -51,7 +51,7 @@ var checkAuth = function (req, res, next) { return __awaiter(void 0, void 0, voi
             case 1:
                 _a.trys.push([1, 3, , 4]);
                 decodedToken = (0, utils_1.decipherToken)(token, enums_1.Secret.Secret);
-                return [4 /*yield*/, (0, repository_1.authUser)(decodedToken)];
+                return [4 /*yield*/, (0, repository_1.getUserById)(decodedToken)];
             case 2:
                 user = _a.sent();
                 if (user && user.status === enums_1.Status.Block) {

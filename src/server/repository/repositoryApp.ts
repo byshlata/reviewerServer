@@ -22,7 +22,7 @@ export const getAppSetting = async (): Promise<AppSettingsServerType> => {
 export const addCategoryAppSettings = async (category: string): Promise<AppSettingsServerType> => {
     try {
         const appSettings = await AppSettings.findOne({ name: AppSettingsEnum.AppSettings });
-        appSettings.category = Array.from(new Set([...appSettings.category, category]))
+        appSettings.category = Array.from(new Set([ ...appSettings.category, category ]))
 
         return await appSettings.save()
     } catch (error) {
@@ -34,7 +34,7 @@ export const addTagsAppSettings = async (tags: string[]): Promise<AppSettingsSer
     try {
         const tagsForBase = changeNameTags(tags)
         const appSettings = await AppSettings.findOne({ name: AppSettingsEnum.AppSettings });
-        appSettings.tags = Array.from([...appSettings.tags, ...tagsForBase])
+        appSettings.tags = Array.from([ ...appSettings.tags, ...tagsForBase ])
 
         return await appSettings.save()
     } catch (error) {

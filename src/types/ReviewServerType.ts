@@ -1,22 +1,24 @@
-import { Nullable } from "./Nullable";
-import { ReviewRatingStarType } from "types/ReviewRatingStarType";
-import { ReviewRatingLikeType } from "types/ReviewRatingLikeType";
-import { CommentType } from "./CommentType";
+import {
+    UserServerType,
+    CommentServerType,
+    ReviewRatingLikeType,
+    ReviewRatingStarType
+} from "types";
 
 export type ReviewServerType = {
     _id: string;
-    idAuthor: string;
+    author: UserServerType;
     titleMain: string;
     titleAbout: string;
     category: string;
-    tag: string[];
+    tags: string[];
     reviewText: string;
     image?: string;
-    authorAssessment: Nullable<number>;
+    authorAssessment: number;
     ratingStar: ReviewRatingStarType;
     ratingLike: ReviewRatingLikeType;
     createdAt: string;
     updatedAt: string;
-    comments: CommentType[];
-    _v: string;
+    comments: CommentServerType[];
+    __v: number;
 }

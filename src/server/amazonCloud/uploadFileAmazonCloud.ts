@@ -19,10 +19,10 @@ const UploadFileAmazonCloud = (bucket: string) => {
             s3: s3Client,
             bucket,
             metadata: function (req, file, cb) {
-                cb(null, {fieldName: file.fieldname});
+                cb(null, { fieldName: file.fieldname });
             },
             key: function (req, file, cb) {
-                cb(null, Date.now().toString()+file.originalname)
+                cb(null, Date.now().toString() + file.originalname)
             }
         })
     });

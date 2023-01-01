@@ -4,5 +4,5 @@ exports.Rights = void 0;
 var Rights;
 (function (Rights) {
     Rights["User"] = "user";
-    Rights["God"] = "active";
+    Rights["Admin"] = "admin";
 })(Rights = exports.Rights || (exports.Rights = {}));

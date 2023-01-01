@@ -47,11 +47,11 @@ var express_validator_1 = require("express-validator");
 var utils_1 = require("../../utils");
 var router = express_1["default"].Router();
 router.post("".concat(enums_1.Path.Root), authValidation_1.registerValidation, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, email, login, password, userBase, token, user, appSettings, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var errors, email, login, password, userBase, _a, user, token, appSettings, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _b.trys.push([0, 3, , 4]);
                 errors = (0, express_validator_1.validationResult)(req.body);
                 if (!errors.isEmpty()) {
                     return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.CorrectEnter })];
@@ -61,19 +61,17 @@ router.post("".concat(enums_1.Path.Root), authValidation_1.registerValidation, f
                 password = req.body.password;
                 return [4 /*yield*/, (0, repository_1.createUser)({ login: login, password: password, email: email })];
             case 1:
-                userBase = _a.sent();
-                token = (0, utils_1.createToken)(userBase._id);
-                user = (0, utils_1.createUserSend)(userBase);
-                return [4 /*yield*/, (0, utils_1.getAppSettingsHelper)()];
+                userBase = _b.sent();
+                _a = (0, utils_1.createTokenAndUserSend)(userBase), user = _a.user, token = _a.token;
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
             case 2:
-                appSettings = _a.sent();
+                appSettings = _b.sent();
                 return [2 /*return*/, res
                         .cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)())
                         .status(200)
                         .send({ user: user, appSettings: appSettings })];
             case 3:
-                error_1 = _a.sent();
-                console.log(error_1);
+                error_1 = _b.sent();
                 return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailIsUse })];
             case 4: return [2 /*return*/];
         }

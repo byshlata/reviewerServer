@@ -22,9 +22,11 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 exports.__esModule = true;
-exports.createAppSend = void 0;
-var createAppSend = function (appSettings) {
-    var _a = JSON.parse(JSON.stringify(appSettings)), _id = _a._id, _v = _a._v, createdAt = _a.createdAt, updatedAt = _a.updatedAt, otherInformation = __rest(_a, ["_id", "_v", "createdAt", "updatedAt"]);
-    return __assign({}, otherInformation);
+exports.createReviewSendShort = void 0;
+var utils_1 = require("../utils");
+var createReviewSendShort = function (review) {
+    var _a = JSON.parse(JSON.stringify(review)), reviewText = _a.reviewText, comments = _a.comments, otherData = __rest(_a, ["reviewText", "comments"]);
+    var authorSend = (0, utils_1.change_IdById)(otherData.author);
+    return (0, utils_1.change_IdById)(__assign(__assign({}, otherData), { author: authorSend }));
 };
-exports.createAppSend = createAppSend;
+exports.createReviewSendShort = createReviewSendShort;

@@ -43,6 +43,7 @@ var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
 var repository_1 = require("../../server/repository");
+require("dotenv").config();
 var UploadFileAmazonCloud = require('../../server/amazonCloud/uploadFileAmazonCloud');
 var router = express_1["default"].Router();
 var singleUpload = UploadFileAmazonCloud(process.env.AWS_PUBLIC_BUCKET_ARTICLE_IMG).single('file');
@@ -56,7 +57,7 @@ router.post("".concat(enums_1.Path.Root), singleUpload, utils_1.checkAuth, funct
                 payload_1 = req.body;
                 token = (0, utils_1.createToken)(id);
                 if (!req.file) return [3 /*break*/, 2];
-                return [4 /*yield*/, singleUpload(req, res, function (err, some) {
+                return [4 /*yield*/, singleUpload(req, res, function (err) {
                         var _a;
                         return __awaiter(this, void 0, void 0, function () {
                             return __generator(this, function (_b) {
@@ -84,13 +85,13 @@ router.post("".concat(enums_1.Path.Root), singleUpload, utils_1.checkAuth, funct
             case 4: return [4 /*yield*/, (0, repository_1.addTagsAppSettings)(payload_1.tags.split(','))];
             case 5:
                 _a.sent();
-                return [4 /*yield*/, (0, utils_1.getAppSettingsHelper)()];
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
             case 6:
                 appSettings = _a.sent();
                 return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({ appSettings: appSettings })];
             case 7:
                 error_1 = _a.sent();
-                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
+                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
             case 8: return [2 /*return*/];
         }
     });

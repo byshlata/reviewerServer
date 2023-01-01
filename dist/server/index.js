@@ -49,11 +49,23 @@ var logout = require('./routes/logoutRouter');
 var authMe = require('./routes/authRouter');
 var createReview = require('./routes/createReview');
 var changeAvatar = require('./routes/changeAvatar');
-var getSortByDataReview = require('./routes/reviewSortByData');
+var getSortByDataReview = require('./routes/reviewSortByDataRouter');
+var getReview = require('./routes/review');
+var searchByReview = require('./routes/searchByReview');
+var searchByTag = require('./routes/searchByTag');
+var authSocial = require('./routes/authSocialRouter');
+var createComment = require('./routes/createComment');
+var reviewsUser = require('./routes/reviewsUser');
+var likeReview = require('./routes/reviewLike');
+var starReview = require('./routes/reviewStar');
+var changeStatus = require('./routes/changeStatus');
+var changeRights = require('./routes/changeRights');
+var users = require('./routes/users');
+var getUser = require('./routes/userRouter');
 var config = require('dotenv').config;
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
+require("dotenv").config();
 config();
-/// mongodb://localhost:8080/userBase
 function run() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -88,6 +100,21 @@ app.use("".concat(path_1.Path.Auth), authMe);
 app.use("".concat(path_1.Path.ChangeAvatar), changeAvatar);
 app.use("".concat(path_1.Path.CreateReview), createReview);
 app.use("".concat(path_1.Path.Reviews), getSortByDataReview);
+app.use("".concat(path_1.Path.Review), getReview);
+app.use("".concat(path_1.Path.Review), searchByReview);
+app.use("".concat(path_1.Path.Review).concat(path_1.Path.Tag), searchByTag);
+app.use("".concat(path_1.Path.Review).concat(path_1.Path.Like), likeReview);
+app.use("".concat(path_1.Path.Review).concat(path_1.Path.Star), starReview);
+app.use("".concat(path_1.Path.Review).concat(path_1.Path.User), reviewsUser);
+app.use("".concat(path_1.Path.Review).concat(path_1.Path.User), reviewsUser);
+app.use("".concat(path_1.Path.Social), authSocial);
+app.use("".concat(path_1.Path.CreateComment), createComment);
+app.use("".concat(path_1.Path.Reviews).concat(path_1.Path.Delete), getReview);
+app.use("".concat(path_1.Path.Users), users);
+app.use("".concat(path_1.Path.User), getUser);
+app.use("".concat(path_1.Path.Users).concat(path_1.Path.Delete), users);
+app.use("".concat(path_1.Path.Users).concat(path_1.Path.ChangeStatus), changeStatus);
+app.use("".concat(path_1.Path.Users).concat(path_1.Path.ChangeRights), changeRights);
 var port = process.env.PORT || 5050;
 app.listen(port, function () {
     console.log("server is listening on port ".concat(port));

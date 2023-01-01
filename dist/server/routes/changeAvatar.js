@@ -57,19 +57,18 @@ router.post("".concat(enums_1.Path.Root), singleUpload, utils_1.checkAuth, funct
                 return [4 /*yield*/, singleUpload(req, res, function (err, some) {
                         var _a;
                         return __awaiter(this, void 0, void 0, function () {
-                            var userBase, token, user, appSettings;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
+                            var userBase, _b, user, token, appSettings;
+                            return __generator(this, function (_c) {
+                                switch (_c.label) {
                                     case 0:
                                         if (!((_a = req.file) === null || _a === void 0 ? void 0 : _a.location)) return [3 /*break*/, 3];
                                         return [4 /*yield*/, (0, repository_1.changeUser)(id_1, { avatar: req.file.location })];
                                     case 1:
-                                        userBase = _b.sent();
-                                        token = (0, utils_1.createToken)(userBase._id);
-                                        user = (0, utils_1.createUserSend)(userBase);
-                                        return [4 /*yield*/, (0, utils_1.getAppSettingsHelper)()];
+                                        userBase = _c.sent();
+                                        _b = (0, utils_1.createTokenAndUserSend)(userBase), user = _b.user, token = _b.token;
+                                        return [4 /*yield*/, (0, repository_1.getAppSetting)()];
                                     case 2:
-                                        appSettings = _b.sent();
+                                        appSettings = _c.sent();
                                         return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
                                                 user: user,
                                                 appSettings: appSettings

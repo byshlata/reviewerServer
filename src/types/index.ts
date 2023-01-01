@@ -36,10 +36,52 @@ export type { AppSettingsSendType } from './AppSettingsSendType'
 
 export type { AppSettingsResponseType } from './AppSettingsResponseType'
 
-export type { ReviewSendType } from './ReviewSendType'
+export type { ReviewResponseType } from 'types/ReviewResponseType'
 
 export type { ReviewsSomeSendType } from './ReviewsSomeSendType'
 
 export type { SortQueryParamsType } from './SortQueryParamsType'
 
 export type { ChangeUserType } from './ChangeUserType'
+
+export type { IdQueryParamsType } from 'types/IdQueryParamsType'
+
+export type { SearchQueryParamsType } from './SearchQueryParamsType'
+
+export type { SearchResponseType } from './SearchResponseType'
+
+export type { SearchReviewType } from 'types/SearchReviewType'
+
+export type  { SearchTagQueryParamsType } from './SearchTagQueryParamsType'
+
+export type  { AuthSocialType } from './AuthSocialType'
+
+export type { DataCommentType } from './DataCommentType'
+
+export type { CommentServerType } from 'types/CommentServerType'
+
+export type { ReviewRatingLikeType } from './ReviewRatingLikeType'
+
+export type { ReviewRatingStarType } from './ReviewRatingStarType'
+
+export type { CommentSendType } from './CommentSendType'
+
+export type { ReviewSendType } from './ReviewSendType'
+
+export type { ReviewUserTableType } from './ReviewUserTableType'
+
+export type { ReviewSendShortType } from './ReviewSendShortType'
+
+export type { IdSomeType } from './IdSomeType'
+
+export type { LikeType } from './LikeType'
+
+export type { StarType } from './StarType'
+
+export type { AdminTableType } from './AdminTableType'
+
+export type { ResponseType } from './ResponseType'
+
+export type { UsersSomeSendType } from './UsersSomeSendType'
+
+export type { UserSendShortType } from './UserSendShortType'

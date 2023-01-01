@@ -1,5 +1,3 @@
-import { ReviewServerType } from "types/ReviewServerType";
-
-export type ReviewsSomeSendType =  {
-    reviews: ReviewServerType[];
+export type ReviewsSomeSendType<T> =  {
+    reviews: T[];
 }

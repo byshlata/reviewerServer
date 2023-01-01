@@ -38,14 +38,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var client_1 = require("../../server/amazonCloud/client");
 var client_s3_1 = require("@aws-sdk/client-s3");
-// import { getUserById } from "server/repositoryUser";
-//
-// const user = await getUserById(id)
-// await deleteFileAmazonCloud("avatar-public-image", "167123006295810.png")
+require("dotenv").config();
 var deleteFile = function (Bucket, Key) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client_1.s3Client.send(new client_s3_1.DeleteObjectCommand({ Bucket: process.env.AWS_PUBLIC_BUCKET_AVATAR_IMG, Key: Key }))];
+            case 0: return [4 /*yield*/, client_1.s3Client.send(new client_s3_1.DeleteObjectCommand({
+                    Bucket: process.env.AWS_PUBLIC_BUCKET_AVATAR_IMG,
+                    Key: Key
+                }))];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

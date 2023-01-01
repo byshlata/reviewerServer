@@ -1,6 +1,7 @@
 import { Nullable } from "./Nullable";
 
 export type DataReviewType = {
+    idUser: string;
     id: string;
     reviewText: string;
     titleMain: string;

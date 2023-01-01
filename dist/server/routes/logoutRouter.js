@@ -42,16 +42,23 @@ exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
+var repository_1 = require("../../server/repository");
 var router = express_1["default"].Router();
-router.get("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var appSettings, error_1;
     return __generator(this, function (_a) {
-        try {
-            return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, 0, (0, utils_1.createCookieOption)()).status(200).send({ message: enums_1.ErrorMessage.Success })];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+            case 1:
+                appSettings = _a.sent();
+                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, 0, (0, utils_1.createCookieOption)()).status(200).send({ user: null, appSettings: appSettings })];
+            case 2:
+                error_1 = _a.sent();
+                return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
+            case 3: return [2 /*return*/];
         }
-        catch (error) {
-            return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
-        }
-        return [2 /*return*/];
     });
 }); });
 module.exports = router;

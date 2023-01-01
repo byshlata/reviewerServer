@@ -1,5 +1,6 @@
 import { connect } from 'mongoose';
 import { Path } from "../enums/path";
+
 const express = require('express')
 const cors = require('cors')
 const register = require('./routes/registerRouter')
@@ -8,12 +9,25 @@ const logout = require('./routes/logoutRouter')
 const authMe = require('./routes/authRouter')
 const createReview = require('./routes/createReview')
 const changeAvatar = require('./routes/changeAvatar')
-const getSortByDataReview = require('./routes/reviewSortByData')
+const getSortByDataReview = require('./routes/reviewSortByDataRouter')
+const getReview = require('./routes/review')
+const searchByReview = require('./routes/searchByReview')
+const searchByTag = require('./routes/searchByTag')
+const authSocial = require('./routes/authSocialRouter')
+const createComment = require('./routes/createComment')
+const reviewsUser = require('./routes/reviewsUser')
+const likeReview = require('./routes/reviewLike')
+const starReview = require('./routes/reviewStar')
+const changeStatus = require('./routes/changeStatus')
+const changeRights = require('./routes/changeRights')
+const users = require('./routes/users')
+const getUser = require('./routes/userRouter')
 const { config } = require('dotenv')
 import cookieParser from 'cookie-parser';
-import { createDataLiveCookie } from "utils/createDataLiveCookie";
+
+require("dotenv").config();
 config()
-/// mongodb://localhost:8080/userBase
+
 async function run() {
     await connect(process.env.DB_HOST);
 }
@@ -47,6 +61,21 @@ app.use(`${Path.Auth}`, authMe)
 app.use(`${Path.ChangeAvatar}`, changeAvatar)
 app.use(`${Path.CreateReview}`, createReview)
 app.use(`${Path.Reviews}`, getSortByDataReview)
+app.use(`${Path.Review}`, getReview)
+app.use(`${Path.Review}`, searchByReview)
+app.use(`${Path.Review}${Path.Tag}`, searchByTag)
+app.use(`${Path.Review}${Path.Like}`, likeReview)
+app.use(`${Path.Review}${Path.Star}`, starReview)
+app.use(`${Path.Review}${Path.User}`, reviewsUser)
+app.use(`${Path.Review}${Path.User}`, reviewsUser)
+app.use(`${Path.Social}`, authSocial)
+app.use(`${Path.CreateComment}`, createComment)
+app.use(`${Path.Reviews}${Path.Delete}`, getReview)
+app.use(`${Path.Users}`, users)
+app.use(`${Path.User}`, getUser)
+app.use(`${Path.Users}${Path.Delete}`, users)
+app.use(`${Path.Users}${Path.ChangeStatus}`, changeStatus)
+app.use(`${Path.Users}${Path.ChangeRights}`, changeRights)
 
 const port = process.env.PORT || 5050
 

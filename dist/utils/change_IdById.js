@@ -22,10 +22,9 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 exports.__esModule = true;
-exports.createUsersData = void 0;
-var createUsersData = function (user) {
-    var userInstance = JSON.parse(JSON.stringify(user));
-    var password = userInstance.password, otherUserData = __rest(userInstance, ["password"]);
-    return __assign({}, otherUserData);
+exports.change_IdById = void 0;
+var change_IdById = function (user) {
+    var _a = JSON.parse(JSON.stringify(user)), _id = _a._id, password = _a.password, otherInformation = __rest(_a, ["_id", "password"]);
+    return __assign({ id: _id }, otherInformation);
 };
-exports.createUsersData = createUsersData;
+exports.change_IdById = change_IdById;

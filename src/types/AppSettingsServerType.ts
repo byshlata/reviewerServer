@@ -5,5 +5,5 @@ export type AppSettingsServerType = AppSettingsSendType & {
     name: 'appSettings'
     createdAt: string;
     updatedAt: string;
-    _v: number;
+    __v: number;
 };

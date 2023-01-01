@@ -6,10 +6,11 @@ const userSchema = new Schema<UserServerType>({
     avatar: { type: String, default: null },
     login: { type: String, required: true,  },
     email: { type: String, required: true, unique: true,  },
-    password: { type: String, required: true,  },
+    password: { type: String, required: true, select: false },
     status: { type: String, default: Status.Active, },
     rights: { type: String, default: Rights.User, },
-    rating: { type: Number, default: 0 }
+    rating: { type: Number, default: 0 },
+    __v: {type: Number, select: false}
 }, {
     timestamps: true
 });

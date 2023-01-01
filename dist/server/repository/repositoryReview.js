@@ -35,17 +35,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
-exports.sortReview = exports.createReview = exports.getReviewsById = void 0;
+exports.setStar = exports.setLike = exports.addComment = exports.deleteSomeReviews = exports.getReviewsUser = exports.searchByTag = exports.searchByReview = exports.sortReview = exports.createReview = exports.getReviewsById = void 0;
 var models_1 = require("../../models");
 var utils_1 = require("../../utils");
+var mongoose_1 = __importDefault(require("mongoose"));
+var repository_1 = require("../../server/repository");
 var getReviewsById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     var error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, models_1.Review.findById(id)];
+                return [4 /*yield*/, models_1.Review.findById({ _id: id }).populate('author').populate('comments.author')];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_1 = _a.sent();
@@ -57,7 +62,7 @@ var getReviewsById = function (id) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.getReviewsById = getReviewsById;
 var createReview = function (_a) {
-    var authorAssessment = _a.authorAssessment, titleAbout = _a.titleAbout, titleMain = _a.titleMain, tags = _a.tags, image = _a.image, category = _a.category, id = _a.id, reviewText = _a.reviewText;
+    var authorAssessment = _a.authorAssessment, titleAbout = _a.titleAbout, titleMain = _a.titleMain, tags = _a.tags, image = _a.image, category = _a.category, idUser = _a.idUser, reviewText = _a.reviewText;
     return __awaiter(void 0, void 0, void 0, function () {
         var ratingLike, ratingStar, review, error_2;
         return __generator(this, function (_b) {
@@ -67,7 +72,7 @@ var createReview = function (_a) {
                     ratingLike = new models_1.RatingLike();
                     ratingStar = new models_1.RatingStar();
                     return [4 /*yield*/, new models_1.Review({
-                            idAuthor: id,
+                            author: new mongoose_1["default"].Types.ObjectId(idUser),
                             image: image,
                             authorAssessment: authorAssessment,
                             titleAbout: titleAbout,
@@ -80,7 +85,7 @@ var createReview = function (_a) {
                         })];
                 case 1:
                     review = _b.sent();
-                    review.tag = tags.split(',');
+                    review.tags = (0, utils_1.changeNameTags)(tags.split(','));
                     return [4 /*yield*/, review.save()];
                 case 2: return [2 /*return*/, _b.sent()];
                 case 3:
@@ -99,7 +104,7 @@ var sortReview = function (count, sort) { return __awaiter(void 0, void 0, void 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, models_1.Review.find({}).sort({ data: sort })];
+                return [4 /*yield*/, models_1.Review.find({}).sort({ createdAt: sort }).populate('author')];
             case 1:
                 reviews = _a.sent();
                 return [2 /*return*/, reviews.slice(0, count)];
@@ -112,3 +117,182 @@ var sortReview = function (count, sort) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.sortReview = sortReview;
+var searchByReview = function (searchText) { return __awaiter(void 0, void 0, void 0, function () {
+    var reviews, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, models_1.Review.find({ $text: { $search: searchText } }, { score: { $meta: "textScore" } }).sort({ score: { $meta: "textScore" } }).limit(10)];
+            case 1:
+                reviews = _a.sent();
+                return [2 /*return*/, reviews.map(function (review) { return ({ titleMain: review.titleMain, _id: review._id }); })];
+            case 2:
+                error_4 = _a.sent();
+                (0, utils_1.throwError)();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.searchByReview = searchByReview;
+var searchByTag = function (tag) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, models_1.Review.find({ tags: { $in: [tag] } })];
+            case 1: return [2 /*return*/, _a.sent()];
+            case 2:
+                error_5 = _a.sent();
+                (0, utils_1.throwError)();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.searchByTag = searchByTag;
+var getReviewsUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, models_1.Review.find({ author: id })];
+            case 1: return [2 /*return*/, _a.sent()];
+            case 2:
+                error_6 = _a.sent();
+                (0, utils_1.throwError)();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getReviewsUser = getReviewsUser;
+var deleteSomeReviews = function (_a) {
+    var idSome = _a.idSome, id = _a.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var error_7;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.Review.deleteMany({ _id: { $in: idSome } })];
+                case 1:
+                    _b.sent();
+                    return [4 /*yield*/, (0, exports.getReviewsUser)(id)];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3:
+                    error_7 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.deleteSomeReviews = deleteSomeReviews;
+var addComment = function (_a) {
+    var textComment = _a.textComment, id = _a.id, idReview = _a.idReview;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var newComment, review, error_8;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, new models_1.Comment({
+                            text: textComment,
+                            author: new mongoose_1["default"].Types.ObjectId(id)
+                        })];
+                case 1:
+                    newComment = _b.sent();
+                    return [4 /*yield*/, models_1.Review.findById({ _id: idReview }).populate('author').populate('comments.author')];
+                case 2:
+                    review = _b.sent();
+                    review.comments.push(newComment);
+                    return [4 /*yield*/, review.save()];
+                case 3: return [2 /*return*/, _b.sent()];
+                case 4:
+                    error_8 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.addComment = addComment;
+var setLike = function (_a) {
+    var idReview = _a.idReview, id = _a.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var review, error_9;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, models_1.Review.findById({ _id: idReview })];
+                case 1:
+                    review = _b.sent();
+                    if (!(0, utils_1.isStatusRating)({ idUser: id, idUsers: review.ratingLike.idUsers })) return [3 /*break*/, 3];
+                    // @ts-ignore
+                    review.ratingLike.idUsers.pull(new mongoose_1["default"].Types.ObjectId(id));
+                    review.ratingLike.countLike -= 1;
+                    return [4 /*yield*/, (0, repository_1.setRating)({ idUser: review.author._id, value: -1 })];
+                case 2:
+                    _b.sent();
+                    return [3 /*break*/, 5];
+                case 3:
+                    // @ts-ignore
+                    review.ratingLike.idUsers.push(new mongoose_1["default"].Types.ObjectId(id));
+                    review.ratingLike.countLike += 1;
+                    return [4 /*yield*/, (0, repository_1.setRating)({ idUser: review.author._id, value: 1 })];
+                case 4:
+                    _b.sent();
+                    _b.label = 5;
+                case 5: return [4 /*yield*/, review.save()];
+                case 6: return [2 /*return*/, _b.sent()];
+                case 7:
+                    error_9 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.setLike = setLike;
+var setStar = function (_a) {
+    var idReview = _a.idReview, numberStar = _a.numberStar, id = _a.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var review, ratingNow, numberMark, error_10;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.Review.findById({ _id: idReview })];
+                case 1:
+                    review = _b.sent();
+                    ratingNow = review.ratingStar.averageRating;
+                    numberMark = review.ratingStar.idUsers.length;
+                    if (!(0, utils_1.isStatusRating)({ idUser: id, idUsers: review.ratingStar.idUsers })) {
+                        review.ratingStar.averageRating = (0, utils_1.countAverageRating)({
+                            ratingNow: ratingNow,
+                            numberMark: numberMark,
+                            numberStar: numberStar
+                        });
+                        // @ts-ignore
+                        review.ratingStar.idUsers.push(new mongoose_1["default"].Types.ObjectId(id));
+                    }
+                    return [4 /*yield*/, review.save()];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3:
+                    error_10 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.setStar = setStar;

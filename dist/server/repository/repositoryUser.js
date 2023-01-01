@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.changeUser = exports.authUser = exports.loginUser = exports.createUser = exports.getUserById = exports.getUserByEmail = void 0;
+exports.changeRightsUsers = exports.changeStatusUsers = exports.deleteSomeUsers = exports.getUsers = exports.setRating = exports.changeUser = exports.loginUser = exports.createUser = exports.getUserById = exports.getUserPasswordByEmail = exports.getUserByEmail = void 0;
 var models_1 = require("../../models");
 var utils_1 = require("../../utils");
 var enums_1 = require("../../enums");
@@ -69,13 +69,13 @@ var getUserByEmail = function (email) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.getUserByEmail = getUserByEmail;
-var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+var getUserPasswordByEmail = function (email) { return __awaiter(void 0, void 0, void 0, function () {
     var error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, models_1.User.findById(id)];
+                return [4 /*yield*/, models_1.User.findOne({ email: new RegExp(email) }).select('password')];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
                 error_2 = _a.sent();
@@ -85,9 +85,26 @@ var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, funct
         }
     });
 }); };
+exports.getUserPasswordByEmail = getUserPasswordByEmail;
+var getUserById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, models_1.User.findById(id)];
+            case 1: return [2 /*return*/, _a.sent()];
+            case 2:
+                error_3 = _a.sent();
+                (0, utils_1.throwError)();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.getUserById = getUserById;
 var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var userNew, salt, _a, user, error_3;
+    var userNew, salt, _a, user, error_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -104,7 +121,7 @@ var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, user.save()];
             case 3: return [2 /*return*/, _b.sent()];
             case 4:
-                error_3 = _b.sent();
+                error_4 = _b.sent();
                 (0, utils_1.throwError)();
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -113,56 +130,38 @@ var createUser = function (payload) { return __awaiter(void 0, void 0, void 0, f
 }); };
 exports.createUser = createUser;
 var loginUser = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, isValidPassword, error_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var user, isValidPassword, _a, error_5;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
-                return [4 /*yield*/, (0, exports.getUserByEmail)(payload.email)];
+                _b.trys.push([0, 8, , 9]);
+                return [4 /*yield*/, (0, exports.getUserPasswordByEmail)(payload.email)];
             case 1:
-                user = _a.sent();
-                if (!user) return [3 /*break*/, 3];
+                user = _b.sent();
+                if (!user) return [3 /*break*/, 6];
                 return [4 /*yield*/, bcrypt.compare(payload.password, user.password)];
             case 2:
-                isValidPassword = _a.sent();
-                return [2 /*return*/, isValidPassword ? user : (0, utils_1.throwError)()];
-            case 3: return [2 /*return*/, null];
-            case 4: return [3 /*break*/, 6];
-            case 5:
-                error_4 = _a.sent();
+                isValidPassword = _b.sent();
+                if (!isValidPassword) return [3 /*break*/, 4];
+                return [4 /*yield*/, (0, exports.getUserByEmail)(payload.email)];
+            case 3:
+                _a = _b.sent();
+                return [3 /*break*/, 5];
+            case 4:
+                _a = (0, utils_1.throwError)();
+                _b.label = 5;
+            case 5: return [2 /*return*/, _a];
+            case 6: return [2 /*return*/, null];
+            case 7: return [3 /*break*/, 9];
+            case 8:
+                error_5 = _b.sent();
                 (0, utils_1.throwError)();
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [3 /*break*/, 9];
+            case 9: return [2 /*return*/];
         }
     });
 }); };
 exports.loginUser = loginUser;
-var authUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, _a, error_5;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _b.trys.push([0, 5, , 6]);
-                return [4 /*yield*/, (0, exports.getUserById)(id)];
-            case 1:
-                user = _b.sent();
-                if (!user) return [3 /*break*/, 3];
-                return [4 /*yield*/, user];
-            case 2:
-                _a = _b.sent();
-                return [3 /*break*/, 4];
-            case 3:
-                _a = null;
-                _b.label = 4;
-            case 4: return [2 /*return*/, _a];
-            case 5:
-                error_5 = _b.sent();
-                return [2 /*return*/, null];
-            case 6: return [2 /*return*/];
-        }
-    });
-}); };
-exports.authUser = authUser;
 var changeUser = function (id, _a) {
     var avatar = _a.avatar, rating = _a.rating;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -171,7 +170,10 @@ var changeUser = function (id, _a) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, models_1.User.findByIdAndUpdate(id, { avatar: avatar, rating: rating }, { "new": true })];
+                    return [4 /*yield*/, models_1.User.findByIdAndUpdate(id, {
+                            avatar: avatar,
+                            rating: rating
+                        }, { "new": true })];
                 case 1: return [2 /*return*/, _b.sent()];
                 case 2:
                     error_6 = _b.sent();
@@ -182,3 +184,191 @@ var changeUser = function (id, _a) {
     });
 };
 exports.changeUser = changeUser;
+var setRating = function (_a) {
+    var value = _a.value, idUser = _a.idUser;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var error_7;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.User.findByIdAndUpdate({ _id: idUser }, { $inc: { rating: value } })];
+                case 1:
+                    _b.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_7 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.setRating = setRating;
+var getUsers = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var error_8;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, models_1.User.find({})];
+            case 1: return [2 /*return*/, _a.sent()];
+            case 2:
+                error_8 = _a.sent();
+                (0, utils_1.throwError)();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getUsers = getUsers;
+var deleteSomeUsers = function (_a) {
+    var idSome = _a.idSome;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var error_9;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.User.deleteMany({ _id: { $in: idSome } })];
+                case 1:
+                    _b.sent();
+                    return [4 /*yield*/, (0, exports.getUsers)()];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3:
+                    error_9 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.deleteSomeUsers = deleteSomeUsers;
+var changeStatusUsers = function (_a) {
+    var idSome = _a.idSome;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var users, i, error_10;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, models_1.User.find({ _id: { $in: idSome } }).lean()];
+                case 1:
+                    users = _b.sent();
+                    i = 0;
+                    _b.label = 2;
+                case 2:
+                    if (!(i < users.length)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, changeStatus({ id: users[i]._id })];
+                case 3:
+                    _b.sent();
+                    _b.label = 4;
+                case 4:
+                    i += 1;
+                    return [3 /*break*/, 2];
+                case 5: return [4 /*yield*/, (0, exports.getUsers)()];
+                case 6: return [2 /*return*/, _b.sent()];
+                case 7:
+                    error_10 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.changeStatusUsers = changeStatusUsers;
+var changeRightsUsers = function (_a) {
+    var idSome = _a.idSome;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var users, i, error_11;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, models_1.User.find({ _id: { $in: idSome } })];
+                case 1:
+                    users = _b.sent();
+                    i = 0;
+                    _b.label = 2;
+                case 2:
+                    if (!(i < users.length)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, changeRights({ id: users[i]._id })];
+                case 3:
+                    _b.sent();
+                    _b.label = 4;
+                case 4:
+                    i += 1;
+                    return [3 /*break*/, 2];
+                case 5: return [4 /*yield*/, (0, exports.getUsers)()];
+                case 6: return [2 /*return*/, _b.sent()];
+                case 7:
+                    error_11 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.changeRightsUsers = changeRightsUsers;
+var changeStatus = function (_a) {
+    var id = _a.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var user, error_12;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.User.findById({ _id: id })];
+                case 1:
+                    user = _b.sent();
+                    if (user.status === enums_1.Status.Active) {
+                        user.status = enums_1.Status.Block;
+                    }
+                    else {
+                        user.status = enums_1.Status.Active;
+                    }
+                    return [4 /*yield*/, user.save()];
+                case 2:
+                    _b.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_12 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+};
+var changeRights = function (_a) {
+    var id = _a.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var user, error_13;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.User.findById({ _id: id })];
+                case 1:
+                    user = _b.sent();
+                    if (user.rights === enums_1.Rights.User) {
+                        user.rights = enums_1.Rights.Admin;
+                    }
+                    else {
+                        user.rights = enums_1.Rights.User;
+                    }
+                    return [4 /*yield*/, user.save()];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3:
+                    error_13 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+};

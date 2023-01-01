@@ -1,14 +1,13 @@
 import { model, Schema } from 'mongoose';
 
-import { CommentType } from "../types/CommentType";
+import { CommentServerType } from "types/CommentServerType";
 
-export const CommentSchema = new Schema<CommentType>({
-    idAuthor: { type: String, required: true },
-    imageAuthor: { type: String, required: true, default: null },
-    loginAuthor: { type: String, required: true }
+export const CommentSchema = new Schema<CommentServerType>({
+    author: { type: Schema.Types.ObjectId, ref: "User" },
+    text: { type: String, },
+    __v: { type: Number, select: false }
 }, {
     timestamps: true
 });
 
-
-export const Comment = model<CommentType>('Comment', CommentSchema);
+export const Comment = model<CommentServerType>('Comment', CommentSchema);

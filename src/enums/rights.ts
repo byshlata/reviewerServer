@@ -1,4 +1,4 @@
 export enum Rights {
-  User = 'user',
-  God = 'active',
+    User = 'user',
+    Admin = 'admin',
 }
