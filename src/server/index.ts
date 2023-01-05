@@ -37,7 +37,7 @@ process.on('unhandledRejection', (reason, p) => {
 })
 
 const corsOptions = {
-    origin: ["https://byshlata.github.io", "http://localhost:3000", "https://vercel.com", "https://reviewer-rust.vercel.app", "https://reviewer-rust.vercel.app/"],
+    origin: ["https://byshlata.github.io", "http://localhost:3000", "https://vercel.com", "https://reviewer-rust.vercel.app", "https://reviewer-byshlata-yandexby.vercel.app"],
     credentials: true,
     optionsSuccessStatus: 200,
     methods: ['GET', 'PUT', 'POST', 'DELETE'],

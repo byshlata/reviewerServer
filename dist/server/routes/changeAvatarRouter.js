@@ -40,34 +40,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
+var repository_1 = require("../repository");
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
 var UploadFileAmazonCloud = require('../../server/amazonCloud/uploadFileAmazonCloud');
 var router = express_1["default"].Router();
 var singleUpload = UploadFileAmazonCloud(process.env.AWS_PUBLIC_BUCKET_AVATAR_IMG).single('file');
 router.post("".concat(enums_1.Path.Root), singleUpload, utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
+    var id_1, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
+                id_1 = req.body.id;
                 if (!req.file) return [3 /*break*/, 2];
                 return [4 /*yield*/, singleUpload(req, res, function (err, some) {
                         var _a;
                         return __awaiter(this, void 0, void 0, function () {
-                            var _b, user, appSettings;
+                            var userBase, _b, user, token, appSettings;
                             return __generator(this, function (_c) {
                                 switch (_c.label) {
                                     case 0:
-                                        if (!((_a = req.file) === null || _a === void 0 ? void 0 : _a.location)) return [3 /*break*/, 2];
-                                        return [4 /*yield*/, (0, utils_1.createAppSettingsAndUserSend)(req.body.id)];
+                                        if (!((_a = req.file) === null || _a === void 0 ? void 0 : _a.location)) return [3 /*break*/, 3];
+                                        return [4 /*yield*/, (0, repository_1.changeUser)(id_1, { avatar: req.file.location })];
                                     case 1:
-                                        _b = _c.sent(), user = _b.user, appSettings = _b.appSettings;
-                                        return [2 /*return*/, res.status(200).send({
+                                        userBase = _c.sent();
+                                        _b = (0, utils_1.createTokenAndUserSend)(userBase), user = _b.user, token = _b.token;
+                                        return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+                                    case 2:
+                                        appSettings = _c.sent();
+                                        return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
                                                 user: user,
                                                 appSettings: appSettings
                                             })];
-                                    case 2: return [2 /*return*/, res.status(422).send({ message: err.message })];
+                                    case 3: return [2 /*return*/, res.status(422).send({ message: err.message })];
                                 }
                             });
                         });
