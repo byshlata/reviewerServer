@@ -1,5 +1,7 @@
 export enum Path {
     Root = '/',
+    AppSettings = '/app-settings',
+    AddCategory = '/add-category',
     PrivacyPolicy = '/privacy-policy',
     User = '/user',
     Users = '/users',
@@ -11,6 +13,7 @@ export enum Path {
     Auth = '/auth',
     ChangeAvatar = '/change-avatar',
     CreateReview = '/create-review',
+    EditReview = '/edit-review',
     Reviews = '/reviews',
     Review = '/review',
     Like = '/like',
@@ -19,6 +22,5 @@ export enum Path {
     Social = '/social',
     Delete = '/delete',
     CreateComment = '/create-comment',
-    ReviewsSortData = '/reviews-sort-data',
     Id = ':id'
 }

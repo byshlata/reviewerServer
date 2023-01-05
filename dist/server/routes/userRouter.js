@@ -42,33 +42,34 @@ exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
-var repository_1 = require("../../server/repository");
+var repository_1 = require("../repository");
 var router = express_1["default"].Router();
-router.get("".concat(enums_1.Path.Root).concat(enums_1.Path.Id), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, userBase, reviewsBase, reviews, user, appSettings, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+router.get("".concat(enums_1.Path.Root).concat(enums_1.Path.Id), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, reviewsBase, reviews, _a, user, appSettings, userOtherBase, userOther, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
+                _b.trys.push([0, 4, , 5]);
                 id = req.params.id;
-                return [4 /*yield*/, (0, repository_1.getUserById)(id)];
-            case 1:
-                userBase = _a.sent();
                 return [4 /*yield*/, (0, repository_1.getReviewsUser)(id)];
-            case 2:
-                reviewsBase = _a.sent();
+            case 1:
+                reviewsBase = _b.sent();
                 reviews = (0, utils_1.createUserReviewsTableResponse)(reviewsBase);
-                user = (0, utils_1.createTokenAndUserSend)(userBase).user;
-                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+                return [4 /*yield*/, (0, utils_1.createAppSettingsAndUserSend)(req.body.id)];
+            case 2:
+                _a = _b.sent(), user = _a.user, appSettings = _a.appSettings;
+                return [4 /*yield*/, (0, repository_1.getUserById)(id)];
             case 3:
-                appSettings = _a.sent();
+                userOtherBase = _b.sent();
+                userOther = (0, utils_1.createUserSend)(userOtherBase);
                 return [2 /*return*/, res.status(200).send({
                         user: user,
+                        userOther: userOther,
                         appSettings: appSettings,
                         reviews: reviews
                     })];
             case 4:
-                error_1 = _a.sent();
+                error_1 = _b.sent();
                 return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
             case 5: return [2 /*return*/];
         }

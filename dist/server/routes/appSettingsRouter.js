@@ -42,33 +42,29 @@ exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
-var repository_1 = require("../../server/repository");
+var repository_1 = require("../repository");
 var router = express_1["default"].Router();
-router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, id, textComment, idReview, review, reviewSend, token, appSettings, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+router.post("".concat(enums_1.Path.AddCategory), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, category, id, _b, user, appSettings, error_1;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _b.trys.push([0, 4, , 5]);
-                _a = req.body, id = _a.id, textComment = _a.textComment, idReview = _a.idReview;
-                if (!id) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, repository_1.addComment)({ id: id, textComment: textComment, idReview: idReview })];
+                _c.trys.push([0, 3, , 4]);
+                _a = req.body, category = _a.category, id = _a.id;
+                return [4 /*yield*/, (0, repository_1.addCategoryAppSettings)(category)];
             case 1:
-                review = _b.sent();
-                reviewSend = (0, utils_1.createReviewSend)(review);
-                token = (0, utils_1.createToken)(id);
-                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+                _c.sent();
+                return [4 /*yield*/, (0, utils_1.createAppSettingsAndUserSend)(id)];
             case 2:
-                appSettings = _b.sent();
-                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
-                        appSettings: appSettings,
-                        review: reviewSend
+                _b = _c.sent(), user = _b.user, appSettings = _b.appSettings;
+                return [2 /*return*/, res.status(200).send({
+                        user: user,
+                        appSettings: appSettings
                     })];
-            case 3: return [3 /*break*/, 5];
-            case 4:
-                error_1 = _b.sent();
-                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.Authorized })];
-            case 5: return [2 /*return*/];
+            case 3:
+                error_1 = _c.sent();
+                return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
+            case 4: return [2 /*return*/];
         }
     });
 }); });

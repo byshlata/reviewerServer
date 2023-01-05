@@ -76,7 +76,7 @@ var getAppSetting = function () { return __awaiter(void 0, void 0, void 0, funct
 }); };
 exports.getAppSetting = getAppSetting;
 var addCategoryAppSettings = function (category) { return __awaiter(void 0, void 0, void 0, function () {
-    var appSettings, error_2;
+    var appSettings, categoryByType, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -84,7 +84,8 @@ var addCategoryAppSettings = function (category) { return __awaiter(void 0, void
                 return [4 /*yield*/, models_1.AppSettings.findOne({ name: enums_1.AppSettingsEnum.AppSettings })];
             case 1:
                 appSettings = _a.sent();
-                appSettings.category = Array.from(new Set(__spreadArray(__spreadArray([], appSettings.category, true), [category], false)));
+                categoryByType = (0, utils_1.createCategory)(category);
+                appSettings.category = Array.from(new Set(__spreadArray(__spreadArray([], appSettings.category, true), [categoryByType], false)));
                 return [4 /*yield*/, appSettings.save()];
             case 2: return [2 /*return*/, _a.sent()];
             case 3:

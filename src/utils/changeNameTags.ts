@@ -1,3 +1,3 @@
-import { uppercaseFirstChar } from "./UppercaseFirstChar";
+import { uppercaseChar } from "./uppercaseChar";
 
-export const changeNameTags = (tags: string[]): string[] => tags.map(tag => uppercaseFirstChar(tag.trim()))
+export const changeNameTags = (tags: string[]): string[] => tags.map(tag => uppercaseChar(tag.trim()))

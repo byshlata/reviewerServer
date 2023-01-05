@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.setStar = exports.setLike = exports.addComment = exports.deleteSomeReviews = exports.getReviewsUser = exports.searchByTag = exports.searchByReview = exports.sortReview = exports.createReview = exports.getReviewsById = void 0;
+exports.setStar = exports.setLike = exports.addComment = exports.deleteSomeReviews = exports.getReviewsUser = exports.searchByTag = exports.searchByReview = exports.sortByRating = exports.sortByData = exports.editReview = exports.createReview = exports.getReviewsById = void 0;
 var models_1 = require("../../models");
 var utils_1 = require("../../utils");
 var mongoose_1 = __importDefault(require("mongoose"));
@@ -98,27 +98,84 @@ var createReview = function (_a) {
     });
 };
 exports.createReview = createReview;
-var sortReview = function (count, sort) { return __awaiter(void 0, void 0, void 0, function () {
-    var reviews, error_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, models_1.Review.find({}).sort({ createdAt: sort }).populate('author')];
-            case 1:
-                reviews = _a.sent();
-                return [2 /*return*/, reviews.slice(0, count)];
-            case 2:
-                error_3 = _a.sent();
-                (0, utils_1.throwError)();
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
+var editReview = function (_a) {
+    var authorAssessment = _a.authorAssessment, titleAbout = _a.titleAbout, titleMain = _a.titleMain, tags = _a.tags, image = _a.image, category = _a.category, reviewText = _a.reviewText, idReview = _a.idReview;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var editData, review, error_3;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    editData = {
+                        authorAssessment: authorAssessment,
+                        titleAbout: titleAbout,
+                        titleMain: titleMain,
+                        image: image,
+                        category: category,
+                        reviewText: reviewText
+                    };
+                    return [4 /*yield*/, models_1.Review.findByIdAndUpdate(idReview, editData, { upsert: true })];
+                case 1:
+                    review = _b.sent();
+                    review.tags = (0, utils_1.changeNameTags)(tags.split(','));
+                    return [4 /*yield*/, review.save()];
+                case 2: return [2 /*return*/, _b.sent()];
+                case 3:
+                    error_3 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
     });
-}); };
-exports.sortReview = sortReview;
+};
+exports.editReview = editReview;
+var sortByData = function (_a) {
+    var sort = _a.sort, count = _a.count;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var reviews, error_4;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.Review.find({}).sort({ createdAt: sort }).populate('author')];
+                case 1:
+                    reviews = _b.sent();
+                    return [2 /*return*/, count ? reviews.slice(0, count) : reviews];
+                case 2:
+                    error_4 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.sortByData = sortByData;
+var sortByRating = function (_a) {
+    var sort = _a.sort, count = _a.count;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var reviews, error_5;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.Review.find({}).sort({ 'ratingStar.averageRating': sort }).populate('author')];
+                case 1:
+                    reviews = _b.sent();
+                    return [2 /*return*/, count ? reviews.slice(0, count) : reviews];
+                case 2:
+                    error_5 = _b.sent();
+                    (0, utils_1.throwError)();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.sortByRating = sortByRating;
 var searchByReview = function (searchText) { return __awaiter(void 0, void 0, void 0, function () {
-    var reviews, error_4;
+    var reviews, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -128,7 +185,7 @@ var searchByReview = function (searchText) { return __awaiter(void 0, void 0, vo
                 reviews = _a.sent();
                 return [2 /*return*/, reviews.map(function (review) { return ({ titleMain: review.titleMain, _id: review._id }); })];
             case 2:
-                error_4 = _a.sent();
+                error_6 = _a.sent();
                 (0, utils_1.throwError)();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -137,15 +194,15 @@ var searchByReview = function (searchText) { return __awaiter(void 0, void 0, vo
 }); };
 exports.searchByReview = searchByReview;
 var searchByTag = function (tag) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_5;
+    var error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, models_1.Review.find({ tags: { $in: [tag] } })];
+                return [4 /*yield*/, models_1.Review.find({ tags: { $in: [tag] } }).populate('author')];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
-                error_5 = _a.sent();
+                error_7 = _a.sent();
                 (0, utils_1.throwError)();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -154,7 +211,7 @@ var searchByTag = function (tag) { return __awaiter(void 0, void 0, void 0, func
 }); };
 exports.searchByTag = searchByTag;
 var getReviewsUser = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var error_6;
+    var error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -162,7 +219,7 @@ var getReviewsUser = function (id) { return __awaiter(void 0, void 0, void 0, fu
                 return [4 /*yield*/, models_1.Review.find({ author: id })];
             case 1: return [2 /*return*/, _a.sent()];
             case 2:
-                error_6 = _a.sent();
+                error_8 = _a.sent();
                 (0, utils_1.throwError)();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -173,21 +230,35 @@ exports.getReviewsUser = getReviewsUser;
 var deleteSomeReviews = function (_a) {
     var idSome = _a.idSome, id = _a.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var error_7;
+        var reviews, tags, appSettingsTags, tagsApp, i, index, error_9;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, models_1.Review.deleteMany({ _id: { $in: idSome } })];
+                    _b.trys.push([0, 5, , 6]);
+                    return [4 /*yield*/, models_1.Review.find({ _id: { $in: idSome } })];
                 case 1:
+                    reviews = _b.sent();
+                    tags = reviews.map(function (review) { return review.tags; }).flat();
+                    return [4 /*yield*/, models_1.AppSettings.findOne()];
+                case 2:
+                    appSettingsTags = _b.sent();
+                    tagsApp = appSettingsTags.tags;
+                    for (i = 0; i < tags.length; i += 1) {
+                        index = tagsApp.indexOf(tags[i]);
+                        tagsApp.splice(index, 1);
+                    }
+                    appSettingsTags.tags = tagsApp;
+                    appSettingsTags.save();
+                    return [4 /*yield*/, models_1.Review.deleteMany({ _id: { $in: idSome } })];
+                case 3:
                     _b.sent();
                     return [4 /*yield*/, (0, exports.getReviewsUser)(id)];
-                case 2: return [2 /*return*/, _b.sent()];
-                case 3:
-                    error_7 = _b.sent();
+                case 4: return [2 /*return*/, _b.sent()];
+                case 5:
+                    error_9 = _b.sent();
                     (0, utils_1.throwError)();
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -196,7 +267,7 @@ exports.deleteSomeReviews = deleteSomeReviews;
 var addComment = function (_a) {
     var textComment = _a.textComment, id = _a.id, idReview = _a.idReview;
     return __awaiter(void 0, void 0, void 0, function () {
-        var newComment, review, error_8;
+        var newComment, review, error_10;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -214,7 +285,7 @@ var addComment = function (_a) {
                     return [4 /*yield*/, review.save()];
                 case 3: return [2 /*return*/, _b.sent()];
                 case 4:
-                    error_8 = _b.sent();
+                    error_10 = _b.sent();
                     (0, utils_1.throwError)();
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
@@ -226,7 +297,7 @@ exports.addComment = addComment;
 var setLike = function (_a) {
     var idReview = _a.idReview, id = _a.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var review, error_9;
+        var review, error_11;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -253,7 +324,7 @@ var setLike = function (_a) {
                 case 5: return [4 /*yield*/, review.save()];
                 case 6: return [2 /*return*/, _b.sent()];
                 case 7:
-                    error_9 = _b.sent();
+                    error_11 = _b.sent();
                     (0, utils_1.throwError)();
                     return [3 /*break*/, 8];
                 case 8: return [2 /*return*/];
@@ -265,7 +336,7 @@ exports.setLike = setLike;
 var setStar = function (_a) {
     var idReview = _a.idReview, numberStar = _a.numberStar, id = _a.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var review, ratingNow, numberMark, error_10;
+        var review, ratingNow, numberMark, error_12;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -287,7 +358,7 @@ var setStar = function (_a) {
                     return [4 /*yield*/, review.save()];
                 case 2: return [2 /*return*/, _b.sent()];
                 case 3:
-                    error_10 = _b.sent();
+                    error_12 = _b.sent();
                     (0, utils_1.throwError)();
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];

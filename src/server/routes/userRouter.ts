@@ -1,32 +1,33 @@
 import {
     Empty,
     IdType,
-    ResponseType,
+    ResponseAppType,
     ReviewsSomeSendType,
-    ReviewUserTableType
+    ReviewUserTableType, UserSendType
 } from "../../types";
 import express, { Request } from "express";
-import { ErrorMessage, Path, Secret } from '../../enums'
+import { ErrorMessage, Path } from '../../enums'
 import {
-    createCookieOption,
-    createTokenAndUserSend,
-    createUserReviewsTableResponse
+    checkAuth,
+    createAppSettingsAndUserSend,
+    createUserReviewsTableResponse, createUserSend
 } from "../../utils";
-import { getAppSetting, getReviewsUser, getUserById } from "../../server/repository";
+import { getReviewsUser, getUserById } from "../repository";
 
 
 const router = express.Router();
 
-router.get<Empty, ResponseType<ReviewsSomeSendType<ReviewUserTableType>>, IdType, Empty>(`${Path.Root}${Path.Id}`, async (req: Request<{ id: string }>, res) => {
+router.get<Empty, ResponseAppType<ReviewsSomeSendType<ReviewUserTableType > & { userOther: UserSendType }> , IdType, Empty>(`${Path.Root}${Path.Id}`, checkAuth, async (req: Request<{ id: string }>, res) => {
         try {
             const { id } = req.params
-            const userBase = await getUserById(id)
             const reviewsBase = await getReviewsUser(id)
             const reviews = createUserReviewsTableResponse(reviewsBase)
-            const { user } = createTokenAndUserSend(userBase)
-            const appSettings = await getAppSetting()
+            const { user, appSettings } = await createAppSettingsAndUserSend(req.body.id)
+            const userOtherBase = await getUserById(id)
+            const userOther = createUserSend(userOtherBase)
             return res.status(200).send({
                 user,
+                userOther,
                 appSettings,
                 reviews
             })

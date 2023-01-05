@@ -80,8 +80,10 @@ export type { StarType } from './StarType'
 
 export type { AdminTableType } from './AdminTableType'
 
-export type { ResponseType } from './ResponseType'
+export type { ResponseAppType } from 'types/ResponseAppType'
 
 export type { UsersSomeSendType } from './UsersSomeSendType'
 
 export type { UserSendShortType } from './UserSendShortType'
+
+export type { TagQueryParamsType } from './TagQueryParamsType'

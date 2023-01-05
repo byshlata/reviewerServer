@@ -1,12 +1,12 @@
 import express from "express";
-import { Empty, ErrorResponseType, IdType, ResponseType } from "types";
+import { Empty, ErrorResponseType, IdType, ResponseAppType } from "types";
 import { ErrorMessage, Path, Secret } from '../../enums'
 import { checkAuth, createCookieOption, createTokenAndUserSend } from "../../utils";
-import { getAppSetting, getUserById } from "../../server/repository";
+import { getAppSetting, getUserById } from "../repository";
 
 const router = express.Router();
 
-router.get<Empty, ResponseType<{}> | ErrorResponseType, IdType, Empty>(`${Path.Root}`, checkAuth, async (req, res) => {
+router.get<Empty, ResponseAppType<Empty>, IdType, Empty>(`${Path.Root}`, checkAuth, async (req, res) => {
     try {
         const userBase = await getUserById(req.body.id)
         const { user, token } = createTokenAndUserSend(userBase)

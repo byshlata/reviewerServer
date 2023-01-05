@@ -1,19 +1,13 @@
 import express from "express";
-import {
-    AppSettingsResponseType,
-    Empty,
-    ErrorResponseType,
-    IdType,
-    UserResponseType
-} from "types";
+import { Empty, IdType, ResponseAppType } from "types";
 import { ErrorMessage, Path, Secret } from '../../enums'
 import { checkAuth, createCookieOption } from "../../utils";
-import { getAppSetting } from "../../server/repository";
+import { getAppSetting } from "../repository";
 
 
 const router = express.Router();
 
-router.post<Empty, ErrorResponseType | UserResponseType & AppSettingsResponseType, IdType, Empty>(`${ Path.Root }`, checkAuth, async (req, res) => {
+router.post<Empty, ResponseAppType<Empty>, IdType, Empty>(`${ Path.Root }`, checkAuth, async (req, res) => {
     try {
         const appSettings = await getAppSetting()
 

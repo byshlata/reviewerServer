@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var repository_1 = require("../../server/repository");
+var repository_1 = require("../repository");
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var authValidation_1 = require("../../validation/authValidation");

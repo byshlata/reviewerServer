@@ -1,12 +1,12 @@
 import { AppSettingsServerType, } from "types";
-import { changeNameTags, throwError } from "../../utils"
+import { changeNameTags, createCategory, throwError } from "../../utils"
 import { AppSettings } from "../../models";
 import { AppSettingsEnum } from "../../enums";
 
 export const getAppSetting = async (): Promise<AppSettingsServerType> => {
     try {
         const appSettings = await AppSettings.findOne({ name: AppSettingsEnum.AppSettings });
-        if (appSettings) {
+         if (appSettings) {
 
             return await appSettings
         } else {
@@ -22,7 +22,8 @@ export const getAppSetting = async (): Promise<AppSettingsServerType> => {
 export const addCategoryAppSettings = async (category: string): Promise<AppSettingsServerType> => {
     try {
         const appSettings = await AppSettings.findOne({ name: AppSettingsEnum.AppSettings });
-        appSettings.category = Array.from(new Set([ ...appSettings.category, category ]))
+        const categoryByType = createCategory(category)
+        appSettings.category = Array.from(new Set([ ...appSettings.category, categoryByType ]))
 
         return await appSettings.save()
     } catch (error) {

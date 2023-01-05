@@ -39,41 +39,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+var repository_1 = require("../repository");
 var express_1 = __importDefault(require("express"));
-var enums_1 = require("../../enums");
+var enums_1 = require("../../enums/");
+var authValidation_1 = require("../../validation/authValidation");
+var express_validator_1 = require("express-validator");
 var utils_1 = require("../../utils");
-var repository_1 = require("../../server/repository");
 var router = express_1["default"].Router();
-router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var idSome, userBase, _a, user, token, appSettings, usersBase, users, error_1;
+router.post("".concat(enums_1.Path.Root), authValidation_1.loginValidation, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var errors, email, password, userBase, _a, user, token, appSettings, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 5, , 6]);
-                idSome = req.body.idSome;
-                return [4 /*yield*/, (0, repository_1.getUserById)(req.body.id)];
+                _b.trys.push([0, 4, , 5]);
+                errors = (0, express_validator_1.validationResult)(req.body);
+                if (!errors.isEmpty()) {
+                    return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.CorrectEnter })];
+                }
+                email = req.body.email;
+                password = req.body.password;
+                return [4 /*yield*/, (0, repository_1.loginUser)({ password: password, email: email })];
             case 1:
                 userBase = _b.sent();
+                if (!userBase) return [3 /*break*/, 3];
                 _a = (0, utils_1.createTokenAndUserSend)(userBase), user = _a.user, token = _a.token;
                 return [4 /*yield*/, (0, repository_1.getAppSetting)()];
             case 2:
                 appSettings = _b.sent();
-                return [4 /*yield*/, (0, repository_1.changeRightsUsers)({ idSome: idSome })];
-            case 3:
-                _b.sent();
-                return [4 /*yield*/, (0, repository_1.getUsers)()];
+                return [2 /*return*/, user.status === 'block'
+                        ? res.status(403).send({
+                            message: enums_1.ErrorMessage.Block,
+                            auth: false
+                        })
+                        : res.status(200).cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).send({
+                            user: user,
+                            appSettings: appSettings
+                        })];
+            case 3: return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailOrPassword })];
             case 4:
-                usersBase = _b.sent();
-                users = (0, utils_1.createAdminTableResponse)(usersBase);
-                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
-                        user: user,
-                        appSettings: appSettings,
-                        users: users
-                    })];
-            case 5:
                 error_1 = _b.sent();
-                return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
-            case 6: return [2 /*return*/];
+                return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

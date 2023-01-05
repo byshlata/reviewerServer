@@ -7,12 +7,14 @@ export {
     createReview,
     searchByReview,
     searchByTag,
-    sortReview,
+    sortByData,
+    sortByRating,
     addComment,
     getReviewsUser,
     deleteSomeReviews,
     setLike,
     setStar,
+    editReview
 } from './repositoryReview'
 
 export {
@@ -25,5 +27,6 @@ export {
     setRating,
     getUsers,
     deleteSomeUsers,
-    changeStatusUsers, changeRightsUsers
+    changeStatusUsers,
+    changeRightsUsers
 } from './repositoryUser'

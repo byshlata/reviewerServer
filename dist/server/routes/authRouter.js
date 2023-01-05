@@ -42,7 +42,7 @@ exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var utils_1 = require("../../utils");
-var repository_1 = require("../../server/repository");
+var repository_1 = require("../repository");
 var router = express_1["default"].Router();
 router.get("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userBase, _a, user, token, appSettings, error_1;

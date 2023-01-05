@@ -35,45 +35,68 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
+var repository_1 = require("../repository");
 var utils_1 = require("../../utils");
-var repository_1 = require("../../server/repository");
 var router = express_1["default"].Router();
-router.post("".concat(enums_1.Path.Root), utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var idSome, userBase, _a, user, token, appSettings, usersBase, users, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+router.get("".concat(enums_1.Path.Root), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var query, reviewsSortData, reviewsSortRating, reviewsTag, reviewSortBase, reviews, appSettings, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 4, , 5]);
-                idSome = req.body.idSome;
-                return [4 /*yield*/, (0, repository_1.getUserById)(req.body.id)];
-            case 1:
-                userBase = _b.sent();
-                _a = (0, utils_1.createTokenAndUserSend)(userBase), user = _a.user, token = _a.token;
-                if (user.status === enums_1.Status.Block) {
-                    user = null;
-                }
-                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
-            case 2:
-                appSettings = _b.sent();
-                return [4 /*yield*/, (0, repository_1.changeStatusUsers)({ idSome: idSome })];
-            case 3:
-                usersBase = _b.sent();
-                users = (0, utils_1.createAdminTableResponse)(usersBase);
-                return [2 /*return*/, res.cookie(enums_1.Secret.NameToken, token, (0, utils_1.createCookieOption)()).status(200).send({
-                        user: user,
-                        appSettings: appSettings,
-                        users: users
+                _a.trys.push([0, 8, , 9]);
+                query = req.query;
+                reviewsSortData = [];
+                reviewsSortRating = [];
+                reviewsTag = [];
+                if (!query[enums_1.QueryAPI.Data]) return [3 /*break*/, 2];
+                return [4 /*yield*/, (0, repository_1.sortByData)({
+                        count: query[enums_1.QueryAPI.Count],
+                        sort: query[enums_1.QueryAPI.Data]
                     })];
+            case 1:
+                reviewsSortData = _a.sent();
+                _a.label = 2;
+            case 2:
+                if (!query[enums_1.QueryAPI.Rating]) return [3 /*break*/, 4];
+                return [4 /*yield*/, (0, repository_1.sortByRating)({
+                        count: query[enums_1.QueryAPI.Count],
+                        sort: query[enums_1.QueryAPI.Rating]
+                    })];
+            case 3:
+                reviewsSortRating = _a.sent();
+                _a.label = 4;
             case 4:
-                error_1 = _b.sent();
+                if (!query[enums_1.QueryAPI.Tag]) return [3 /*break*/, 6];
+                return [4 /*yield*/, (0, repository_1.searchByTag)(query[enums_1.QueryAPI.Tag])];
+            case 5:
+                reviewsTag = _a.sent();
+                _a.label = 6;
+            case 6:
+                reviewSortBase = __spreadArray(__spreadArray(__spreadArray([], reviewsSortData, true), reviewsSortRating, true), reviewsTag, true);
+                reviews = reviewSortBase.map(function (review) { return (0, utils_1.createReviewSendShort)(review); });
+                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
+            case 7:
+                appSettings = _a.sent();
+                return [2 /*return*/, res.send({ appSettings: appSettings, reviews: reviews })];
+            case 8:
+                error_1 = _a.sent();
                 return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
-            case 5: return [2 /*return*/];
+            case 9: return [2 /*return*/];
         }
     });
 }); });

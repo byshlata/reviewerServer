@@ -1,12 +1,6 @@
-import { getAppSetting, loginUser } from "../../server/repository";
+import { getAppSetting, loginUser } from "../repository";
 import express from "express";
-import {
-    AppSettingsResponseType,
-    Empty,
-    ErrorResponseType,
-    LoginType,
-    UserResponseType
-} from "types";
+import { Empty, LoginType, ResponseAppType } from "types";
 import { ErrorMessage, Path, Secret } from '../../enums/'
 import { loginValidation } from '../../validation/authValidation'
 import { validationResult } from 'express-validator'
@@ -14,7 +8,7 @@ import { createCookieOption, createTokenAndUserSend } from "../../utils";
 
 const router = express.Router();
 
-router.post<Empty, UserResponseType & AppSettingsResponseType | ErrorResponseType, LoginType, Empty>(`${ Path.Root }`, loginValidation, async (req, res) => {
+router.post<Empty, ResponseAppType<Empty>, LoginType, Empty>(`${ Path.Root }`, loginValidation, async (req, res) => {
     try {
         const errors = validationResult(req.body);
         if (!errors.isEmpty()) {
@@ -41,7 +35,7 @@ router.post<Empty, UserResponseType & AppSettingsResponseType | ErrorResponseTyp
         return res.status(400).send({ message: ErrorMessage.EmailOrPassword })
     } catch (error) {
 
-        return res.status(400).send({ message: ErrorMessage.EmailOrPassword })
+        return res.status(500).send({ message: ErrorMessage.ServerError })
     }
 });
 

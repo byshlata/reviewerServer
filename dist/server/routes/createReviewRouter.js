@@ -41,29 +41,56 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
-var repository_1 = require("../../server/repository");
 var utils_1 = require("../../utils");
+var repository_1 = require("../repository");
+require("dotenv").config();
+var UploadFileAmazonCloud = require('../../server/amazonCloud/uploadFileAmazonCloud');
 var router = express_1["default"].Router();
-router.post("".concat(enums_1.Path.Root), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tag, reviews, appSettings, reviewsSend, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+var singleUpload = UploadFileAmazonCloud(process.env.AWS_PUBLIC_BUCKET_ARTICLE_IMG).single('file');
+router.post("".concat(enums_1.Path.Root), singleUpload, utils_1.checkAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var payload_1, _a, user, appSettings, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                tag = req.body.tag;
-                return [4 /*yield*/, (0, repository_1.searchByTag)(tag)];
+                _b.trys.push([0, 7, , 8]);
+                payload_1 = req.body;
+                if (!req.file) return [3 /*break*/, 2];
+                return [4 /*yield*/, singleUpload(req, res, function (err) {
+                        var _a;
+                        return __awaiter(this, void 0, void 0, function () {
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0:
+                                        if (!((_a = req.file) === null || _a === void 0 ? void 0 : _a.location)) return [3 /*break*/, 2];
+                                        payload_1.image = req.file.location;
+                                        return [4 /*yield*/, (0, repository_1.createReview)(payload_1)];
+                                    case 1:
+                                        _b.sent();
+                                        return [3 /*break*/, 3];
+                                    case 2: return [2 /*return*/, res.status(422).send({ message: err.message })];
+                                    case 3: return [2 /*return*/];
+                                }
+                            });
+                        });
+                    })];
             case 1:
-                reviews = _a.sent();
-                return [4 /*yield*/, (0, repository_1.getAppSetting)()];
-            case 2:
-                appSettings = _a.sent();
-                reviewsSend = reviews.map(function (review) { return (0, utils_1.createReviewSendShort)(review); });
-                return [2 /*return*/, res.send({ reviews: reviewsSend, appSettings: appSettings })];
+                _b.sent();
+                return [3 /*break*/, 4];
+            case 2: return [4 /*yield*/, (0, repository_1.createReview)(payload_1)];
             case 3:
-                error_1 = _a.sent();
-                console.log(error_1.message);
+                _b.sent();
+                _b.label = 4;
+            case 4: return [4 /*yield*/, (0, repository_1.addTagsAppSettings)(payload_1.tags.split(','))];
+            case 5:
+                _b.sent();
+                return [4 /*yield*/, (0, utils_1.createAppSettingsAndUserSend)(req.body.id)];
+            case 6:
+                _a = _b.sent(), user = _a.user, appSettings = _a.appSettings;
+                return [2 /*return*/, res.send({ appSettings: appSettings, user: user })];
+            case 7:
+                error_1 = _b.sent();
                 return [2 /*return*/, res.status(401).send({ message: enums_1.ErrorMessage.ServerError })];
-            case 4: return [2 /*return*/];
+            case 8: return [2 /*return*/];
         }
     });
 }); });

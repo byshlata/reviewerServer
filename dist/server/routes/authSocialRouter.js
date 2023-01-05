@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var repository_1 = require("../../server/repository");
+var repository_1 = require("../repository");
 var express_1 = __importDefault(require("express"));
 var enums_1 = require("../../enums");
 var authValidation_1 = require("../../validation/authValidation");
@@ -76,7 +76,7 @@ router.post("".concat(enums_1.Path.Root), authValidation_1.registerValidation, f
                         .send({ user: user, appSettings: appSettings })];
             case 5:
                 error_1 = _c.sent();
-                return [2 /*return*/, res.status(400).send({ message: enums_1.ErrorMessage.EmailIsUse })];
+                return [2 /*return*/, res.status(500).send({ message: enums_1.ErrorMessage.ServerError })];
             case 6: return [2 /*return*/];
         }
     });

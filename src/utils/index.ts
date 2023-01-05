@@ -14,7 +14,7 @@ export { createUserSend } from './createUserSend'
 
 export { changeNameTags } from './changeNameTags'
 
-export { uppercaseFirstChar } from './UppercaseFirstChar'
+export { uppercaseChar } from './uppercaseChar'
 
 export { change_IdById } from './change_IdById'
 
@@ -31,3 +31,7 @@ export { countAverageRating } from './countAverageRating'
 export { isStatusRating } from './isStatusRating'
 
 export { createAdminTableResponse } from './createAdminTableResponse'
+
+export { createCategory } from './createCategory'
+
+export { createAppSettingsAndUserSend } from './createAppSettingsAndUserSend'

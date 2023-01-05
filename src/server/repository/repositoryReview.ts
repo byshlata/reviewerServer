@@ -7,7 +7,7 @@ import {
     ReviewServerType,
     StarType
 } from "types";
-import { Comment, RatingLike, RatingStar, Review } from "../../models";
+import { AppSettings, Comment, RatingLike, RatingStar, Review } from "../../models";
 import {
     changeNameTags,
     countAverageRating,
@@ -59,15 +59,61 @@ export const createReview = async ({
     }
 }
 
-export const sortReview = async (count: number, sort: any): Promise<ReviewServerType[]> => {
+
+export const editReview = async ({
+                                     authorAssessment,
+                                     titleAbout,
+                                     titleMain,
+                                     tags,
+                                     image,
+                                     category,
+                                     reviewText,
+                                     idReview
+                                 }: DataReviewType & { idReview: string }): Promise<ReviewServerType> => {
+    try {
+        const editData = {
+            authorAssessment,
+            titleAbout,
+            titleMain,
+            image,
+            category,
+            reviewText
+        }
+        const review = await Review.findByIdAndUpdate(idReview, editData, { upsert: true })
+        review.tags = changeNameTags(tags.split(','));
+
+        return await review.save()
+    } catch
+        (error) {
+        throwError()
+    }
+}
+
+export const sortByData = async ({
+                                     sort,
+                                     count
+                                 }: { count?: number, sort: any }): Promise<ReviewServerType[]> => {
     try {
         const reviews = await Review.find({}).sort({ createdAt: sort }).populate('author')
 
-        return reviews.slice(0, count)
+        return count ? reviews.slice(0, count) : reviews
     } catch (error) {
         throwError()
     }
 }
+export const sortByRating = async ({
+                                       sort,
+                                       count
+                                   }: { count?: number, sort: any }): Promise<ReviewServerType[]> => {
+    try {
+        const reviews = await Review.find({}).sort({ 'ratingStar.averageRating': sort }).populate('author')
+
+        return count ? reviews.slice(0, count) : reviews
+    } catch (error) {
+        throwError()
+    }
+}
+
 
 export const searchByReview = async (searchText: string): Promise<{ titleMain: string, _id: string }[]> => {
     try {
@@ -79,9 +125,10 @@ export const searchByReview = async (searchText: string): Promise<{ titleMain: s
     }
 }
 
+
 export const searchByTag = async (tag: string): Promise<ReviewServerType[]> => {
     try {
-        return await Review.find({ tags: { $in: [tag] } })
+        return await Review.find({ tags: { $in: [tag] } }).populate('author')
     } catch (error) {
         throwError()
     }
@@ -101,6 +148,16 @@ export const deleteSomeReviews = async ({
                                             id
                                         }: IdSomeType & IdType): Promise<ReviewServerType[]> => {
     try {
+        const reviews = await Review.find({ _id: { $in: idSome } })
+        const tags = reviews.map(review => review.tags).flat()
+        const appSettingsTags = await AppSettings.findOne()
+        const tagsApp = appSettingsTags.tags;
+        for (let i = 0; i < tags.length; i += 1) {
+            const index = tagsApp.indexOf(tags[i])
+            tagsApp.splice(index, 1)
+        }
+        appSettingsTags.tags = tagsApp
+        appSettingsTags.save()
         await Review.deleteMany({ _id: { $in: idSome } })
         return await getReviewsUser(id)
     } catch (error) {
